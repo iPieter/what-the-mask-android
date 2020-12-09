@@ -7,16 +7,15 @@ import MapView from 'react-native-maps';
 function HomeScreen() {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-       <MapView
-                 style={styles.map}
-
-    initialRegion={{
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }}
-  />
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 51.05,
+          longitude: 3.71667,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      />
     </View>
   );
 }
