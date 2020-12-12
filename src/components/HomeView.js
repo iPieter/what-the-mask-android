@@ -12,7 +12,7 @@ import Geolocation from '@react-native-community/geolocation';
 const GEOLOCATION_OPTIONS = {
   enableHighAccuracy: true,
   timeout: 20000,
-  maximumAge: 1000,
+  maximumAge: 10,
 };
 
 Geolocation.setRNConfiguration(GEOLOCATION_OPTIONS);
@@ -23,16 +23,24 @@ export default class HomeView extends React.PureComponent {
     this.mounted = false;
     this.state = {
       myPosition: null,
+      region: null,
     };
   }
 
   watchLocation() {
-    this.watchID = Geolocation.getCurrentPosition(
+    this.watchID = Geolocation.watchPosition(
       (position) => {
         const myLastPosition = this.state.myPosition;
         const myPosition = position.coords;
         if (myPosition !== myLastPosition) {
           this.setState({myPosition});
+          let region = {
+            latitude: myPosition.latitude,
+            longitude: myPosition.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          };
+          this.setState({region});
         }
       },
       null,
@@ -42,10 +50,6 @@ export default class HomeView extends React.PureComponent {
 
   componentDidMount() {
     this.mounted = true;
-    // If you supply a coordinate prop, we won't try to track location automatically
-    if (this.props.coordinate) {
-      return;
-    }
 
     if (Platform.OS === 'android') {
       PermissionsAndroid.requestPermission(
@@ -70,14 +74,7 @@ export default class HomeView extends React.PureComponent {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 51.05,
-            longitude: 3.71667,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}>
+        <MapView style={styles.map} region={this.state.region}>
           <Marker
             anchor={{x: 0.5, y: 0.5}}
             style={styles.mapMarker}
@@ -85,8 +82,8 @@ export default class HomeView extends React.PureComponent {
             coordinate={this.state.myPosition}>
             <View style={styles.container}>
               <View style={styles.markerHalo} />
-              
-              <View style={styles.marker}/>
+
+              <View style={styles.marker} />
             </View>
             {this.props.children}
           </Marker>
