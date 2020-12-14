@@ -6,7 +6,7 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, Geojson} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
 const GEOLOCATION_OPTIONS = {
@@ -16,6 +16,43 @@ const GEOLOCATION_OPTIONS = {
 };
 
 Geolocation.setRNConfiguration(GEOLOCATION_OPTIONS);
+
+const myPlace = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: {
+        bike: 'true',
+        pedestrian: 'true',
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [3.725266456604004, 51.05965805789785],
+            [3.71912956237793, 51.060602094874234],
+            [3.716897964477539, 51.05720347167124],
+            [3.719301223754883, 51.05412831189872],
+            [3.7192153930664062, 51.052239954696695],
+            [3.720674514770508, 51.05175436468443],
+            [3.7204170227050777, 51.04905654967599],
+            [3.721532821655273, 51.04500953250352],
+            [3.718271255493164, 51.042635117855774],
+            [3.724880218505859, 51.039073267688664],
+            [3.728656768798828, 51.047734562953956],
+            [3.731789588928223, 51.04862488469109],
+            [3.728055953979492, 51.055692892390816],
+            [3.728957176208496, 51.05701465195619],
+            [3.726167678833008, 51.05812058504876],
+            [3.7265539169311523, 51.05933438364608],
+            [3.725266456604004, 51.05965805789785],
+          ],
+        ],
+      },
+    },
+  ],
+};
 
 export default class HomeView extends React.PureComponent {
   constructor(props) {
@@ -87,6 +124,12 @@ export default class HomeView extends React.PureComponent {
             </View>
             {this.props.children}
           </Marker>
+          <Geojson
+            geojson={myPlace}
+            strokeColor="#3498db"
+            fillColor="#3498db44"
+            strokeWidth={2}
+          />
         </MapView>
       </View>
     );
