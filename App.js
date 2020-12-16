@@ -4,22 +4,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MapView from 'react-native-maps';
 import HomeView from './src/components/HomeView';
+import SettingsView from './src/components/SettingsView';
 
 const Stack = createStackNavigator();
-
-function SettingsScreen({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Settings Screen</Text>
-      <Button
-        title="Go to Settings... again"
-        onPress={() => navigation.push('Settings')}
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
-}
 
 function App() {
   return (
@@ -37,7 +24,7 @@ function App() {
             ),
           })}
         />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Settings" component={SettingsView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
