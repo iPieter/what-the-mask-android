@@ -19,11 +19,13 @@
     "react-native": "0.63.4",
     "react-native-background-fetch": "^3.1.0",
     "react-native-background-geolocation": "^3.9.3",
+    "react-native-elements": "^3.0.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "0.27.1",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.0",
+    "react-native-vector-icons": "^7.1.0",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5"
   },

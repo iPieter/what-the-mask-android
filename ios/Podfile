@@ -9,6 +9,8 @@ target 'bat' do
   use_react_native!(:path => config["reactNativePath"])
   rn_maps_path = '../node_modules/react-native-maps'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'batTests' do
     inherit! :complete
     # Pods for testing
