@@ -5778,7 +5778,7 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
-"react-native-background-fetch@~3.1.0":
+"react-native-background-fetch@^3.1.0", "react-native-background-fetch@~3.1.0":
   "integrity" "sha512-dnrfX3Od4r3aKuRSwDkpaPFXc3dYD5DbIW7CWC41M1CdEZEXNIWfZRvJPMVa72iflOzAh68ZTfZ3PgBK/NDtsQ=="
   "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-3.1.0.tgz"
   "version" "3.1.0"
