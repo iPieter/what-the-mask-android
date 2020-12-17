@@ -19,7 +19,7 @@ function App() {
             headerRight: () => (
               <Button
                 onPress={() => navigation.navigate('Settings')}
-                title="Settings"
+                title="Instellingen"
               />
             ),
           })}

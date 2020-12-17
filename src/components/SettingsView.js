@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Settings,
-  SafeAreaView,
-  SectionList,
-} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
 
 export default class HomeView extends React.PureComponent {
@@ -17,6 +9,15 @@ export default class HomeView extends React.PureComponent {
     this.state = {
       selectedIndex: 0,
     };
+  }
+
+  buildItem(title) {
+    return (
+      <View style={styles.box}>
+        <Text>{title}</Text>
+        <Text style>:oui:</Text>
+      </View>
+    );
   }
 
   render() {
@@ -29,6 +30,7 @@ export default class HomeView extends React.PureComponent {
           instellen voor welke regelgeving je meldingen wilt krijgen.
         </Text>
         <SegmentedControl
+          style={styles.item}
           values={['Wandelen', 'Sporten', 'Fietsen', 'AI (premium)']}
           selectedIndex={this.state.selectedIndex}
           onChange={(event) => {
@@ -37,16 +39,17 @@ export default class HomeView extends React.PureComponent {
             });
           }}
         />
-        <Text style={styles.header}>Notificaties</Text>
-        <SegmentedControl
-          values={['Aan', 'Uit']}
-          selectedIndex={this.state.selectedIndex}
-          onChange={(event) => {
-            this.setState({
-              selectedIndex: event.nativeEvent.selectedSegmentIndex,
-            });
-          }}
-        />
+        <Text style={styles.header}>Premium</Text>
+        {this.buildItem('Detecteer activiteiten')}
+        {this.buildItem('Statistieken')}
+        <View style={styles.emptyBox} />
+
+        <Text style={styles.header}>Algemene instellingen</Text>
+        {this.buildItem('Stuur waarschuwingen in de achtergrond')}
+        {this.buildItem('Ververs regelgevingsbestanden')}
+        {this.buildItem('Juridische kennisgeving')}
+        <View style={styles.emptyBox} />
+
       </View>
     );
   }
@@ -55,13 +58,9 @@ export default class HomeView extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
   },
   item: {
-    marginHorizontal: 15,
-    backgroundColor: '#f9c2ff',
-    padding: 0,
-    marginVertical: 0,
+    marginHorizontal: 20,
   },
   'item:last-child': {
     backgroundColor: '#444',
@@ -70,8 +69,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginTop: 15,
-
-    marginHorizontal: 2,
+    marginHorizontal: 22,
     marginBottom: 5,
   },
   title: {
@@ -80,6 +78,20 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 7,
-    marginHorizontal: 2,
+    marginHorizontal: 22,
+    color: 'grey',
+  },
+  box: {
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingVertical: 13,
+    backgroundColor: 'white',
+    borderColor: 'grey',
+    borderTopWidth: 0.5,
+  },
+  emptyBox: {
+    borderColor: 'grey',
+    borderTopWidth: 0.5,
   },
 });
