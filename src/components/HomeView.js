@@ -11,6 +11,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable} from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 Icon.loadFont();
 
