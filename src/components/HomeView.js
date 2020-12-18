@@ -1,13 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Platform,
   PermissionsAndroid,
-} from "react-native";
-import { Button } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
+} from 'react-native';
+import MapView, {Marker, Geojson} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import {Button} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {Pressable} from 'react-native';
 
 Icon.loadFont();
 
@@ -20,16 +23,16 @@ const GEOLOCATION_OPTIONS = {
 Geolocation.setRNConfiguration(GEOLOCATION_OPTIONS);
 
 const myPlace = {
-  type: "FeatureCollection",
+  type: 'FeatureCollection',
   features: [
     {
-      type: "Feature",
+      type: 'Feature',
       properties: {
-        bike: "true",
-        pedestrian: "true",
+        bike: 'true',
+        pedestrian: 'true',
       },
       geometry: {
-        type: "Polygon",
+        type: 'Polygon',
         coordinates: [
           [
             [3.725266456604004, 51.05965805789785],
@@ -155,7 +158,7 @@ export default class HomeView extends React.PureComponent {
       (position) => {
         const myPosition = position.coords;
         if (myPosition !== this.state.myPosition) {
-          this.setState({ myPosition });
+          this.setState({myPosition});
           if (this.state.followLocation) {
             let region = {
               latitude: myPosition.latitude,
@@ -163,21 +166,21 @@ export default class HomeView extends React.PureComponent {
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             };
-            this.setState({ region });
+            this.setState({region});
           }
         }
       },
       null,
-      this.props.geolocationOptions
+      this.props.geolocationOptions,
     );
   }
 
   componentDidMount() {
     this.mounted = true;
 
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       PermissionsAndroid.requestPermission(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       ).then((granted) => {
         if (granted && this.mounted) {
           this.watchLocation();
@@ -197,20 +200,18 @@ export default class HomeView extends React.PureComponent {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <MapView
           style={styles.map}
           region={this.state.region}
           onPanDrag={(event: MapEvent) =>
-            this.setState({ followLocation: false })
-          }
-        >
+            this.setState({followLocation: false})
+          }>
           <Marker
-            anchor={{ x: 0.5, y: 0.5 }}
+            anchor={{x: 0.5, y: 0.5}}
             style={styles.mapMarker}
             {...this.props}
-            coordinate={this.state.myPosition}
-          >
+            coordinate={this.state.myPosition}>
             <View style={styles.container}>
               <View style={styles.markerHalo} />
 
@@ -226,29 +227,25 @@ export default class HomeView extends React.PureComponent {
           />
         </MapView>
         <View style={styles.button}>
-          <Button
-            icon={
-              <Icon
-                raised
-                name="location-arrow"
-                type="font-awesome"
-                // size={23}
-                color={this.state.followLocation ? "blue" : "grey"}
-              />
-            }
-            type="outline"
-            raised
+          <Pressable
             onPress={() => {
-              this.setState({ followLocation: true });
+              this.setState({followLocation: true});
               let region = {
                 latitude: this.state.myPosition.latitude,
                 longitude: this.state.myPosition.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               };
-              this.setState({ region });
-            }}
-          />
+              this.setState({region});
+            }}>
+            <Icon
+              raised
+              name="location-arrow"
+              type="font-awesome"
+              size={20}
+              color={this.state.followLocation ? 'rgb(48,127,250)' : 'grey'}
+            />
+          </Pressable>
         </View>
       </View>
     );
@@ -274,15 +271,15 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   markerHalo: {
-    position: "absolute",
-    backgroundColor: "white",
+    position: 'absolute',
+    backgroundColor: 'white',
     top: 0,
     left: 0,
     width: HALO_SIZE,
     height: HALO_SIZE,
     borderRadius: Math.ceil(HALO_SIZE / 2),
     margin: (HEADING_BOX_SIZE - HALO_SIZE) / 2,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOpacity: 0.25,
     shadowRadius: 2,
     shadowOffset: {
@@ -291,30 +288,41 @@ const styles = StyleSheet.create({
     },
   },
   marker: {
-    justifyContent: "center",
-    backgroundColor: "blue",
+    justifyContent: 'center',
+    backgroundColor: 'blue',
     width: SIZE,
     height: SIZE,
     borderRadius: Math.ceil(SIZE / 2),
     margin: (HEADING_BOX_SIZE - SIZE) / 2,
   },
   bubble: {
-    backgroundColor: "rgba(255,255,255,0.7)",
+    backgroundColor: 'rgba(255,255,255,0.7)',
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 20,
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginVertical: 20,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   button: {
-    position: "absolute",
-    top: 5,
-    right: 5,
-    alignSelf: "flex-end",
-    width: 30,
-    height: 30,
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+    paddingHorizontal: 13,
+    paddingVertical: 11,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
