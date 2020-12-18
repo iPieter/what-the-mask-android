@@ -7,21 +7,12 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import MapView, {Marker, Geojson} from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable} from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 Icon.loadFont();
-
-const GEOLOCATION_OPTIONS = {
-  enableHighAccuracy: true,
-  timeout: 20000,
-  maximumAge: 10,
-};
-
-Geolocation.setRNConfiguration(GEOLOCATION_OPTIONS);
 
 const myPlace = {
   type: 'FeatureCollection',
@@ -65,7 +56,7 @@ export default class HomeView extends React.PureComponent {
     super(props);
     this.mounted = false;
     this.state = {
-      myPosition: myPlace,
+      myPosition: null,
       region: null,
       followLocation: true,
     };
@@ -77,7 +68,10 @@ export default class HomeView extends React.PureComponent {
     //
 
     // This handler fires whenever bgGeo receives a location update.
-    BackgroundGeolocation.onLocation(this.onLocation, this.onError);
+    BackgroundGeolocation.onLocation(
+      (location) => this.onLocation(location),
+      this.onError,
+    );
 
     // This handler fires when movement states changes (stationary->moving; moving->stationary)
     BackgroundGeolocation.onMotionChange(this.onMotionChange);
@@ -97,11 +91,11 @@ export default class HomeView extends React.PureComponent {
         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
         // Activity Recognition
-        stopTimeout: 1,
+        stopTimeout: 2,
         // Application config
         debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
         logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-        stopOnTerminate: true, // <-- Allow the background-service to continue tracking when user closes the app.
+        stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
         startOnBoot: true, // <-- Auto start tracking when device is powered-up.
         // HTTP / SQLite config
         url: 'http://192.168.0.20/api/locations',
@@ -138,8 +132,20 @@ export default class HomeView extends React.PureComponent {
   componentWillUnmount() {
     BackgroundGeolocation.removeListeners();
   }
+
   onLocation(location) {
     console.log('[location] -', location);
+    const myPosition = location.coords;
+    this.setState({myPosition});
+    if (this.state.followLocation) {
+      let region = {
+        latitude: myPosition.latitude,
+        longitude: myPosition.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
+      this.setState({region});
+    }
   }
   onError(error) {
     console.warn('[location] ERROR -', error);
@@ -154,60 +160,13 @@ export default class HomeView extends React.PureComponent {
     console.log('[motionchange] -', event.isMoving, event.location);
   }
 
-  watchLocation() {
-    this.watchID = Geolocation.watchPosition(
-      (position) => {
-        const myPosition = position.coords;
-        if (myPosition !== this.state.myPosition) {
-          this.setState({myPosition});
-          if (this.state.followLocation) {
-            let region = {
-              latitude: myPosition.latitude,
-              longitude: myPosition.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            };
-            this.setState({region});
-          }
-        }
-      },
-      null,
-      this.props.geolocationOptions,
-    );
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.requestPermission(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      ).then((granted) => {
-        if (granted && this.mounted) {
-          this.watchLocation();
-        }
-      });
-    } else {
-      this.watchLocation();
-    }
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    if (this.watchID) {
-      Geolocation.clearWatch(this.watchID);
-    }
-  }
-
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <MapView
           style={styles.map}
           region={this.state.region}
-          onPanDrag={(event: MapEvent) =>
-            this.setState({followLocation: false})
-          }>
+          onPanDrag={(event) => this.setState({followLocation: false})}>
           <Marker
             anchor={{x: 0.5, y: 0.5}}
             style={styles.mapMarker}
@@ -231,9 +190,10 @@ export default class HomeView extends React.PureComponent {
           <Pressable
             onPress={() => {
               this.setState({followLocation: true});
+              let _this = this;
               let region = {
-                latitude: this.state.myPosition.latitude,
-                longitude: this.state.myPosition.longitude,
+                latitude: _this.state.myPosition.latitude,
+                longitude: _this.state.myPosition.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               };
