@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Switch, Settings} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
 
 export default class SettingsView extends React.PureComponent {
@@ -8,10 +8,13 @@ export default class SettingsView extends React.PureComponent {
     this.navigation = props.navigation;
     this.state = {
       selectedIndex: 0,
+      automaticDetection: true,
+      sendWarnings: false,
+      shareData: false,
     };
   }
 
-  buildItem(title, route) {
+  buildRoutableItem(title, route) {
     return (
       <View
         style={styles.box}
@@ -20,8 +23,17 @@ export default class SettingsView extends React.PureComponent {
             this.navigation.push(route);
           }
         }}>
-        <Text>{title}</Text>
+        <Text style={styles.boxText}>{title}</Text>
         <Text style>:oui:</Text>
+      </View>
+    );
+  }
+
+  buildTogableItem(title, stateProperty) {
+    return (
+      <View style={styles.box}>
+        <Text style={styles.boxText}>{title}</Text>
+        {stateProperty()}
       </View>
     );
   }
@@ -46,14 +58,56 @@ export default class SettingsView extends React.PureComponent {
           }}
         />
         <Text style={styles.header}>Premium</Text>
-        {this.buildItem('Detecteer activiteiten')}
-        {this.buildItem('Statistieken')}
+        {this.buildTogableItem('Detecteer activiteiten automatisch', () => {
+          return (
+            <Switch
+              style={styles.boxToggle}
+              ios_backgroundColor={
+                this.state.automaticDetection ? 'green' : 'grey'
+              }
+              onValueChange={() =>
+                this.setState({
+                  automaticDetection: !this.state.automaticDetection,
+                })
+              }
+              value={this.state.automaticDetection}
+            />
+          );
+        })}
+        {this.buildRoutableItem('Statistieken')}
         <View style={styles.emptyBox} />
 
         <Text style={styles.header}>Algemene instellingen</Text>
-        {this.buildItem('Stuur waarschuwingen in de achtergrond')}
-        {this.buildItem('Ververs regelgevingsbestanden')}
-        {this.buildItem('Juridische kennisgeving', 'LegalNotice')}
+        {this.buildTogableItem('Stuur waarschuwingen in de achtergrond', () => {
+          return (
+            <Switch
+              style={styles.boxToggle}
+              ios_backgroundColor={this.state.sendWarnings ? 'green' : 'grey'}
+              onValueChange={() =>
+                this.setState({
+                  sendWarnings: !this.state.sendWarnings,
+                })
+              }
+              value={this.state.sendWarnings}
+            />
+          );
+        })}
+        {this.buildTogableItem('Deel anonieme gebruikersdata', () => {
+          return (
+            <Switch
+              style={styles.boxToggle}
+              ios_backgroundColor={this.state.shareData ? 'green' : 'grey'}
+              onValueChange={() =>
+                this.setState({
+                  shareData: !this.state.shareData,
+                })
+              }
+              value={this.state.shareData}
+            />
+          );
+        })}
+        {this.buildRoutableItem('Versie regelgevingsbestanden')}
+        {this.buildRoutableItem('Juridische kennisgeving', 'LegalNotice')}
         <View style={styles.emptyBox} />
       </View>
     );
@@ -90,13 +144,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    paddingVertical: 13,
     backgroundColor: 'white',
-    borderColor: 'grey',
+    borderColor: '#ccc',
     borderTopWidth: 0.5,
   },
   emptyBox: {
-    borderColor: 'grey',
+    borderColor: '#ccc',
     borderTopWidth: 0.5,
+  },
+  boxText: {
+    paddingVertical: 13,
+  },
+  boxToggle: {
+    marginVertical: 6,
   },
 });
