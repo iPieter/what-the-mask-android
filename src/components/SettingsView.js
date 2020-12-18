@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, Switch, Settings} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
+import Icon from "react-native-vector-icons/FontAwesome";
 
+Icon.loadFont();
 export default class SettingsView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -29,7 +31,7 @@ export default class SettingsView extends React.PureComponent {
           }
         }}>
         <Text style={styles.boxText}>{title}</Text>
-        <Text style>:oui:</Text>
+        <Icon style={styles.boxToggle} name="angle-right" type="font-awesome" color="#998" size={28}/>
       </View>
     );
   }
