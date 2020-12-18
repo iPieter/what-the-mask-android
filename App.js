@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import MapView from 'react-native-maps';
 import HomeView from './src/components/HomeView';
 import SettingsView from './src/components/SettingsView';
+import LegalNoticeView from './src/components/LegalNoticeView';
 
 const Stack = createStackNavigator();
 
@@ -24,7 +25,8 @@ function App() {
             ),
           })}
         />
-        <Stack.Screen name="Settings" component={SettingsView} />
+        <Stack.Screen name="Settings" component={SettingsView} options={{ title: 'Instellingen' }}/>
+        <Stack.Screen name="LegalNotice" component={LegalNoticeView} options={{ title: 'Juridische kennisgeving' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

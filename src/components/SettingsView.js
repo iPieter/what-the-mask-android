@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
 
-export default class HomeView extends React.PureComponent {
+export default class SettingsView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.navigation = props.navigation;
@@ -11,9 +11,15 @@ export default class HomeView extends React.PureComponent {
     };
   }
 
-  buildItem(title) {
+  buildItem(title, route) {
     return (
-      <View style={styles.box}>
+      <View
+        style={styles.box}
+        onStartShouldSetResponder={() => {
+          if (route != null) {
+            this.navigation.push(route);
+          }
+        }}>
         <Text>{title}</Text>
         <Text style>:oui:</Text>
       </View>
@@ -47,9 +53,8 @@ export default class HomeView extends React.PureComponent {
         <Text style={styles.header}>Algemene instellingen</Text>
         {this.buildItem('Stuur waarschuwingen in de achtergrond')}
         {this.buildItem('Ververs regelgevingsbestanden')}
-        {this.buildItem('Juridische kennisgeving')}
+        {this.buildItem('Juridische kennisgeving', 'LegalNotice')}
         <View style={styles.emptyBox} />
-
       </View>
     );
   }
