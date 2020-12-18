@@ -7,11 +7,16 @@ export default class SettingsView extends React.PureComponent {
     super(props);
     this.navigation = props.navigation;
     this.state = {
-      selectedIndex: 0,
-      automaticDetection: true,
-      sendWarnings: false,
-      shareData: false,
+      selectedIndex: Settings.get('selectedIndex'),
+      automaticDetection: Settings.get('automaticDetection'),
+      sendWarnings: Settings.get('sendWarnings'),
+      shareData: Settings.get('shareData'),
     };
+  }
+
+  storeData(data) {
+    Settings.set(data);
+    this.setState(data);
   }
 
   buildRoutableItem(title, route) {
@@ -52,7 +57,7 @@ export default class SettingsView extends React.PureComponent {
           values={['Wandelen', 'Sporten', 'Fietsen', 'AI (premium)']}
           selectedIndex={this.state.selectedIndex}
           onChange={(event) => {
-            this.setState({
+            this.storeData({
               selectedIndex: event.nativeEvent.selectedSegmentIndex,
             });
           }}
@@ -66,7 +71,7 @@ export default class SettingsView extends React.PureComponent {
                 this.state.automaticDetection ? 'green' : 'grey'
               }
               onValueChange={() =>
-                this.setState({
+                this.storeData({
                   automaticDetection: !this.state.automaticDetection,
                 })
               }
@@ -84,7 +89,7 @@ export default class SettingsView extends React.PureComponent {
               style={styles.boxToggle}
               ios_backgroundColor={this.state.sendWarnings ? 'green' : 'grey'}
               onValueChange={() =>
-                this.setState({
+                this.storeData({
                   sendWarnings: !this.state.sendWarnings,
                 })
               }
@@ -98,7 +103,7 @@ export default class SettingsView extends React.PureComponent {
               style={styles.boxToggle}
               ios_backgroundColor={this.state.shareData ? 'green' : 'grey'}
               onValueChange={() =>
-                this.setState({
+                this.storeData({
                   shareData: !this.state.shareData,
                 })
               }
