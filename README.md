@@ -17,3 +17,6 @@ Serve a test geojson file at `http://localhost:8080/test_ghent.geojson`, provide
 ```bash
 python -m SimpleHTTPServer 8080
 ```
+
+## Credits for in legal notice
+- point in polygon: https://github.com/substack/point-in-polygon/blob/master/LICENSE

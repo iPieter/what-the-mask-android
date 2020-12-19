@@ -146,6 +146,12 @@ export default class HomeView extends React.PureComponent {
       };
       this.setState({region});
     }
+    for (let feature of myPlace.features) {
+      if (this.inside(myPosition, feature.geometry.coordinates[0])) {
+        console.log('Inside polygon, sending notification.');
+        break;
+      }
+    }
   }
   onError(error) {
     console.warn('[location] ERROR -', error);
@@ -158,6 +164,28 @@ export default class HomeView extends React.PureComponent {
   }
   onMotionChange(event) {
     console.log('[motionchange] -', event.isMoving, event.location);
+  }
+
+  inside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+    var x = point.longitude,
+      y = point.latitude;
+
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+      var xi = vs[i][0],
+        yi = vs[i][1];
+      var xj = vs[j][0],
+        yj = vs[j][1];
+
+      var intersect =
+        yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+      if (intersect) inside = !inside;
+    }
+
+    return inside;
   }
 
   render() {
