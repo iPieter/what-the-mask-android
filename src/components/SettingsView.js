@@ -1,13 +1,32 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, Switch, Settings} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 Icon.loadFont();
 export default class SettingsView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.navigation = props.navigation;
+
+    // DEFAULTS
+    if (Settings.get('selectedIndex') == null) {
+      this.storeData({selectedIndex: 0});
+    }
+
+    if (Settings.get('automaticDetection') == null) {
+      this.storeData({automaticDetection: true});
+    }
+
+    if (Settings.get('sendWarnings') == null) {
+      this.storeData({sendWarnings: true});
+    }
+
+    if (Settings.get('shareData') == null) {
+      this.storeData({shareData: false});
+    }
+
+    // LOAD STATE
     this.state = {
       selectedIndex: Settings.get('selectedIndex'),
       automaticDetection: Settings.get('automaticDetection'),
@@ -31,7 +50,13 @@ export default class SettingsView extends React.PureComponent {
           }
         }}>
         <Text style={styles.boxText}>{title}</Text>
-        <Icon style={styles.boxToggle} name="angle-right" type="font-awesome" color="#998" size={28}/>
+        <Icon
+          style={styles.boxToggle}
+          name="angle-right"
+          type="font-awesome"
+          color="#998"
+          size={28}
+        />
       </View>
     );
   }
@@ -69,9 +94,6 @@ export default class SettingsView extends React.PureComponent {
           return (
             <Switch
               style={styles.boxToggle}
-              ios_backgroundColor={
-                this.state.automaticDetection ? 'green' : 'grey'
-              }
               onValueChange={() =>
                 this.storeData({
                   automaticDetection: !this.state.automaticDetection,
@@ -89,7 +111,6 @@ export default class SettingsView extends React.PureComponent {
           return (
             <Switch
               style={styles.boxToggle}
-              ios_backgroundColor={this.state.sendWarnings ? 'green' : 'grey'}
               onValueChange={() =>
                 this.storeData({
                   sendWarnings: !this.state.sendWarnings,
@@ -103,7 +124,6 @@ export default class SettingsView extends React.PureComponent {
           return (
             <Switch
               style={styles.boxToggle}
-              ios_backgroundColor={this.state.shareData ? 'green' : 'grey'}
               onValueChange={() =>
                 this.storeData({
                   shareData: !this.state.shareData,
