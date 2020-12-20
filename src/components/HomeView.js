@@ -11,6 +11,7 @@ import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable} from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import {Notifications} from 'react-native-notifications';
 
 Icon.loadFont();
 
@@ -149,6 +150,14 @@ export default class HomeView extends React.PureComponent {
     for (let feature of myPlace.features) {
       if (this.inside(myPosition, feature.geometry.coordinates[0])) {
         console.log('Inside polygon, sending notification.');
+        let localNotification = Notifications.postLocalNotification({
+          body: "Local notification!",
+          title: "Local Notification Title",
+          sound: "chime.aiff",
+          silent: false,
+          category: "SOME_CATEGORY",
+          userInfo: { }
+      });
         break;
       }
     }
