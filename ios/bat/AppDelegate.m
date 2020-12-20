@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "RNNotifications.h"
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -28,6 +29,8 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [RNNotifications startMonitorNotifications];
+
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
@@ -49,6 +52,14 @@ static void InitializeFlipper(UIApplication *application) {
   [[TSBackgroundFetch sharedInstance] didFinishLaunching];
   
   return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  [RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

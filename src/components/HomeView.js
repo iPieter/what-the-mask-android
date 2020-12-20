@@ -61,6 +61,24 @@ export default class HomeView extends React.PureComponent {
       region: null,
       followLocation: true,
     };
+
+    Notifications.registerRemoteNotifications();
+
+    Notifications.events().registerNotificationReceivedForeground(
+      (notification: Notification, completion) => {
+        console.log(
+          `Notification received in foreground: ${notification.title} : ${notification.body}`,
+        );
+        completion({alert: false, sound: false, badge: false});
+      },
+    );
+
+    Notifications.events().registerNotificationOpened(
+      (notification: Notification, completion) => {
+        console.log(`Notification opened: ${notification.payload}`);
+        completion();
+      },
+    );
   }
 
   componentWillMount() {
@@ -151,13 +169,13 @@ export default class HomeView extends React.PureComponent {
       if (this.inside(myPosition, feature.geometry.coordinates[0])) {
         console.log('Inside polygon, sending notification.');
         let localNotification = Notifications.postLocalNotification({
-          body: "Local notification!",
-          title: "Local Notification Title",
-          sound: "chime.aiff",
+          body: 'Je bent nu in een mondmaskerzone voor voetgangers.',
+          title: 'Draag je mondmasker.',
+          sound: 'chime.aiff',
           silent: false,
-          category: "SOME_CATEGORY",
-          userInfo: { }
-      });
+          category: 'SOME_CATEGORY',
+          userInfo: {},
+        });
         break;
       }
     }
