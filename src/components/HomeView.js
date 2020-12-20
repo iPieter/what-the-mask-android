@@ -60,6 +60,7 @@ export default class HomeView extends React.PureComponent {
       myPosition: null,
       region: null,
       followLocation: true,
+      lastState: false,
     };
 
     Notifications.registerRemoteNotifications();
@@ -165,21 +166,46 @@ export default class HomeView extends React.PureComponent {
       };
       this.setState({region});
     }
+
+    let currentState = false;
+
     for (let feature of myPlace.features) {
-      if (this.inside(myPosition, feature.geometry.coordinates[0])) {
-        console.log('Inside polygon, sending notification.');
-        let localNotification = Notifications.postLocalNotification({
-          body: 'Je bent nu in een mondmaskerzone voor voetgangers.',
-          title: 'Draag je mondmasker.',
-          sound: 'chime.aiff',
-          silent: false,
-          category: 'SOME_CATEGORY',
-          userInfo: {},
-        });
-        break;
-      }
+      currentState =
+        currentState ||
+        this.inside(myPosition, feature.geometry.coordinates[0]);
     }
+    if (currentState !== this.state.lastState) {
+      if (currentState) this.showEnteringZoneNotification();
+      else this.showLeavingZoneNotification();
+    }
+
+    this.setState({lastState: currentState});
   }
+
+  showEnteringZoneNotification(activity = 'walking') {
+    console.log('Inside polygon, sending notification.');
+    let localNotification = Notifications.postLocalNotification({
+      body: 'Je bent nu in een mondmaskerzone voor voetgangers.',
+      title: 'Draag je mondmasker.',
+      sound: 'chime.aiff',
+      silent: false,
+      category: 'SOME_CATEGORY',
+      userInfo: {},
+    });
+  }
+
+  showLeavingZoneNotification(activity = 'walking') {
+    console.log('Outside polygon, sending notification.');
+    let localNotification = Notifications.postLocalNotification({
+      body: 'Je verlaat een mondmaskerzone voor voetgangers.',
+      title: 'Geen mondmaskerplicht.',
+      sound: 'chime.aiff',
+      silent: false,
+      category: 'SOME_CATEGORY',
+      userInfo: {},
+    });
+  }
+
   onError(error) {
     console.warn('[location] ERROR -', error);
   }
