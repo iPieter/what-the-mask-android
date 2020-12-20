@@ -15,43 +15,6 @@ import {Notifications} from 'react-native-notifications';
 
 Icon.loadFont();
 
-const myPlace = {
-  type: 'FeatureCollection',
-  features: [
-    {
-      type: 'Feature',
-      properties: {
-        bike: 'true',
-        pedestrian: 'true',
-      },
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [3.725266456604004, 51.05965805789785],
-            [3.71912956237793, 51.060602094874234],
-            [3.716897964477539, 51.05720347167124],
-            [3.719301223754883, 51.05412831189872],
-            [3.7192153930664062, 51.052239954696695],
-            [3.720674514770508, 51.05175436468443],
-            [3.7204170227050777, 51.04905654967599],
-            [3.721532821655273, 51.04500953250352],
-            [3.718271255493164, 51.042635117855774],
-            [3.724880218505859, 51.039073267688664],
-            [3.728656768798828, 51.047734562953956],
-            [3.731789588928223, 51.04862488469109],
-            [3.728055953979492, 51.055692892390816],
-            [3.728957176208496, 51.05701465195619],
-            [3.726167678833008, 51.05812058504876],
-            [3.7265539169311523, 51.05933438364608],
-            [3.725266456604004, 51.05965805789785],
-          ],
-        ],
-      },
-    },
-  ],
-};
-
 export default class HomeView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -61,6 +24,7 @@ export default class HomeView extends React.PureComponent {
       region: null,
       followLocation: true,
       lastState: false,
+      geojson: null,
     };
 
     Notifications.registerRemoteNotifications();
@@ -153,6 +117,32 @@ export default class HomeView extends React.PureComponent {
     BackgroundGeolocation.removeListeners();
   }
 
+  async componentDidMount() {
+    // Some code to prevent caching of the geojson file
+    var myHeaders = new Headers();
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+
+    var myInit = {
+      method: 'GET',
+      headers: myHeaders,
+    };
+
+    let response = await fetch(
+      'http://192.168.0.20:8080/test_ghent.geojson',
+      myInit,
+    );
+
+    if (response.ok) {
+      // if HTTP-status is 200-299
+      // get the response body (the method explained below)
+      let json = await response.json();
+      this.setState({geojson: json});
+    } else {
+      alert('HTTP-Error: ' + response.status);
+    }
+  }
+
   onLocation(location) {
     console.log('[location] -', location);
     const myPosition = location.coords;
@@ -169,17 +159,19 @@ export default class HomeView extends React.PureComponent {
 
     let currentState = false;
 
-    for (let feature of myPlace.features) {
-      currentState =
-        currentState ||
-        this.inside(myPosition, feature.geometry.coordinates[0]);
-    }
-    if (currentState !== this.state.lastState) {
-      if (currentState) this.showEnteringZoneNotification();
-      else this.showLeavingZoneNotification();
-    }
+    if (this.state.geojson != null) {
+      for (let feature of this.state.geojson.features) {
+        currentState =
+          currentState ||
+          this.inside(myPosition, feature.geometry.coordinates[0]);
+      }
+      if (currentState !== this.state.lastState) {
+        if (currentState) this.showEnteringZoneNotification();
+        else this.showLeavingZoneNotification();
+      }
 
-    this.setState({lastState: currentState});
+      this.setState({lastState: currentState});
+    }
   }
 
   showEnteringZoneNotification(activity = 'walking') {
@@ -260,12 +252,16 @@ export default class HomeView extends React.PureComponent {
             </View>
             {this.props.children}
           </Marker>
-          <Geojson
-            geojson={myPlace}
-            strokeColor="#3498db"
-            fillColor="#3498db44"
-            strokeWidth={2}
-          />
+          {this.state.geojson != null ? (
+            <Geojson
+              geojson={this.state.geojson}
+              strokeColor="#3498db"
+              fillColor="#3498db44"
+              strokeWidth={2}
+            />
+          ) : (
+            <View />
+          )}
         </MapView>
         <View style={styles.button}>
           <Pressable
