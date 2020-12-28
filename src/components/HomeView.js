@@ -129,7 +129,7 @@ export default class HomeView extends React.PureComponent {
     };
 
     let response = await fetch(
-      'http://192.168.0.20:8080/test_ghent.geojson',
+      'http://localhost:8000/bat/policy/zones.geojson',
       myInit,
     );
 
@@ -166,12 +166,30 @@ export default class HomeView extends React.PureComponent {
           this.inside(myPosition, feature.geometry.coordinates[0]);
       }
       if (currentState !== this.state.lastState) {
+        //show notifications
         if (currentState) this.showEnteringZoneNotification();
         else this.showLeavingZoneNotification();
+
+        //and log events on remote server for debugging/statistics
+        this.logEvent(location);
       }
 
       this.setState({lastState: currentState});
     }
+  }
+
+  async logEvent(location) {
+    console.log('Sending ', location);
+    const i = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(location),
+    };
+
+    let response = await fetch('http://localhost:8000/bat/events/trigger', i);
+    console.log(response.ok);
   }
 
   showEnteringZoneNotification(activity = 'walking') {

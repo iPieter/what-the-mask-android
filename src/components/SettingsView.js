@@ -15,7 +15,7 @@ export default class SettingsView extends React.PureComponent {
     }
 
     if (Settings.get('automaticDetection') == null) {
-      this.storeData({automaticDetection: true});
+      this.storeData({automaticDetection: false});
     }
 
     if (Settings.get('sendWarnings') == null) {
