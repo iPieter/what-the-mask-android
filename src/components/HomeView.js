@@ -171,15 +171,18 @@ export default class HomeView extends React.PureComponent {
         else this.showLeavingZoneNotification();
 
         //and log events on remote server for debugging/statistics
-        this.logEvent(location);
+        this.logEvent(
+          location,
+          currentState ? 'entering_zone' : 'leaving_zone',
+        );
       }
 
       this.setState({lastState: currentState});
     }
   }
 
-  async logEvent(location) {
-    console.log('Sending ', location);
+  async logEvent(location, event) {
+    location.event = event;
     const i = {
       method: 'POST',
       headers: {
