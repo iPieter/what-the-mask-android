@@ -129,7 +129,7 @@ export default class HomeView extends React.PureComponent {
     };
 
     let response = await fetch(
-      'http://localhost:8000/bat/policy/zones.geojson',
+      'https://bat.ipieter.be/bat/policy/zones.geojson',
       myInit,
     );
 
@@ -191,7 +191,7 @@ export default class HomeView extends React.PureComponent {
       body: JSON.stringify(location),
     };
 
-    let response = await fetch('http://localhost:8000/bat/events/trigger', i);
+    let response = await fetch('https://bat.ipieter.be/bat/events/trigger', i);
     console.log(response.ok);
   }
 
