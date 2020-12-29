@@ -28,6 +28,7 @@ export default class SettingsView extends React.PureComponent {
 
     // LOAD STATE
     this.state = {
+      latestUpdate: null,
       selectedIndex: Settings.get('selectedIndex'),
       automaticDetection: Settings.get('automaticDetection'),
       sendWarnings: Settings.get('sendWarnings'),
@@ -61,13 +62,63 @@ export default class SettingsView extends React.PureComponent {
     );
   }
 
-  buildTogableItem(title, stateProperty) {
+  buildButtonItem(title) {
+    const fetch = () => {
+      this.fetchGeojson();
+    };
+    return (
+      <View style={styles.box}>
+        <Text style={styles.boxText}>{title}</Text>
+        <Text style={styles.boxTextLight}>{this.state.latestUpdate}</Text>
+        <Text style={styles.boxTextClickable} onPress={fetch}>Update</Text>
+      </View>
+    );
+  }
+
+  buildToggableItem(title, stateProperty) {
     return (
       <View style={styles.box}>
         <Text style={styles.boxText}>{title}</Text>
         {stateProperty()}
       </View>
     );
+  }
+
+  currentDate() {
+    var date  = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year  = new Date().getFullYear();
+    return date + '-' + month + '-' + year; //format: dd-mm-yyyy;
+  }
+
+  async fetchGeojson() {
+    // Some code to prevent caching of the geojson file
+    var myHeaders = new Headers();
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+
+    var myInit = {
+      method: 'GET',
+      headers: myHeaders,
+    };
+
+    let response = await fetch(
+      'https://bat.ipieter.be/bat/policy/zones.geojson',
+      myInit,
+    );
+
+    if (response.ok) {
+      // if HTTP-status is 200-299
+      // get the response body (the method explained below)
+      let json = await response.json();
+      this.setState({geojson: json});
+
+      // Set the latest update to the current date
+      var date = this.currentDate();
+      this.setState(date);
+    } else {
+      alert('HTTP-Error: ' + response.status);
+    }
   }
 
   render() {
@@ -90,7 +141,7 @@ export default class SettingsView extends React.PureComponent {
           }}
         />
         <Text style={styles.header}>Premium</Text>
-        {this.buildTogableItem('Detecteer activiteiten automatisch', () => {
+        {this.buildToggableItem('Detecteer activiteiten automatisch', () => {
           return (
             <Switch
               style={styles.boxToggle}
@@ -107,7 +158,7 @@ export default class SettingsView extends React.PureComponent {
         <View style={styles.emptyBox} />
 
         <Text style={styles.header}>Algemene instellingen</Text>
-        {this.buildTogableItem('Stuur waarschuwingen in de achtergrond', () => {
+        {this.buildToggableItem('Stuur waarschuwingen in de achtergrond', () => {
           return (
             <Switch
               style={styles.boxToggle}
@@ -120,7 +171,7 @@ export default class SettingsView extends React.PureComponent {
             />
           );
         })}
-        {this.buildTogableItem('Deel anonieme gebruikersdata', () => {
+        {this.buildToggableItem('Deel anonieme gebruikersdata', () => {
           return (
             <Switch
               style={styles.boxToggle}
@@ -133,7 +184,7 @@ export default class SettingsView extends React.PureComponent {
             />
           );
         })}
-        {this.buildRoutableItem('Versie regelgevingsbestanden')}
+        {this.buildButtonItem('Versie regelgevingsbestanden')}
         {this.buildRoutableItem('Juridische kennisgeving', 'LegalNotice')}
         <View style={styles.emptyBox} />
       </View>
@@ -181,6 +232,14 @@ const styles = StyleSheet.create({
   },
   boxText: {
     paddingVertical: 13,
+  },
+  boxTextLight: {
+    paddingVertical: 13,
+    color: 'grey'
+  },
+  boxTextClickable: {
+    paddingVertical: 13,
+    color: 'blue'
   },
   boxToggle: {
     marginVertical: 6,
