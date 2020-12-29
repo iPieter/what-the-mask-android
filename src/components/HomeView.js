@@ -257,7 +257,7 @@ export default class HomeView extends React.PureComponent {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <MapView
+        <MapView compassOffset={{x: -370, y: 0}}
           style={styles.map}
           region={this.state.region}
           onPanDrag={(event) => this.setState({followLocation: false})}>
