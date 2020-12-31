@@ -21,6 +21,7 @@
     "react-native-background-geolocation": "^3.9.3",
     "react-native-elements": "^3.0.0",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-get-random-values": "^1.5.0",
     "react-native-maps": "0.27.1",
     "react-native-notifications": "^3.4.1",
     "react-native-reanimated": "^1.13.2",

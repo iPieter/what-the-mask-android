@@ -1,17 +1,13 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Platform,
-  PermissionsAndroid,
-} from 'react-native';
+import {View, Text, StyleSheet, Settings} from 'react-native';
 import MapView, {Marker, Geojson} from 'react-native-maps';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Pressable} from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import {Notifications} from 'react-native-notifications';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 Icon.loadFont();
 
@@ -19,12 +15,22 @@ export default class HomeView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mounted = false;
+
+    let deviceId;
+    if (Settings.get('deviceId') == null) {
+      deviceId = uuidv4();
+      Settings.set({deviceId: deviceId});
+    } else {
+      deviceId = Settings.get('deviceId');
+    }
+
     this.state = {
       myPosition: null,
       region: null,
       followLocation: true,
       lastState: false,
       geojson: null,
+      deviceId: deviceId,
     };
 
     Notifications.registerRemoteNotifications();
@@ -183,6 +189,7 @@ export default class HomeView extends React.PureComponent {
 
   async logEvent(location, event) {
     location.event = event;
+    location.deviceId = this.state.deviceId;
     const i = {
       method: 'POST',
       headers: {
@@ -257,7 +264,8 @@ export default class HomeView extends React.PureComponent {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <MapView compassOffset={{x: -370, y: 0}}
+        <MapView
+          compassOffset={{x: -370, y: 0}}
           style={styles.map}
           region={this.state.region}
           onPanDrag={(event) => this.setState({followLocation: false})}>

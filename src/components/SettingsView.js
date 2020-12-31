@@ -33,6 +33,7 @@ export default class SettingsView extends React.PureComponent {
       automaticDetection: Settings.get('automaticDetection'),
       sendWarnings: Settings.get('sendWarnings'),
       shareData: Settings.get('shareData'),
+      deviceId: Settings.get('deviceId'),
     };
   }
 
@@ -70,7 +71,9 @@ export default class SettingsView extends React.PureComponent {
       <View style={styles.box}>
         <Text style={styles.boxText}>{title}</Text>
         <Text style={styles.boxTextLight}>{this.state.latestUpdate}</Text>
-        <Text style={styles.boxTextClickable} onPress={fetch}>Update</Text>
+        <Text style={styles.boxTextClickable} onPress={fetch}>
+          Update
+        </Text>
       </View>
     );
   }
@@ -85,9 +88,9 @@ export default class SettingsView extends React.PureComponent {
   }
 
   currentDate() {
-    var date  = new Date().getDate();
+    var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
-    var year  = new Date().getFullYear();
+    var year = new Date().getFullYear();
     return date + '-' + month + '-' + year; //format: dd-mm-yyyy;
   }
 
@@ -158,19 +161,22 @@ export default class SettingsView extends React.PureComponent {
         <View style={styles.emptyBox} />
 
         <Text style={styles.header}>Algemene instellingen</Text>
-        {this.buildToggableItem('Stuur waarschuwingen in de achtergrond', () => {
-          return (
-            <Switch
-              style={styles.boxToggle}
-              onValueChange={() =>
-                this.storeData({
-                  sendWarnings: !this.state.sendWarnings,
-                })
-              }
-              value={this.state.sendWarnings}
-            />
-          );
-        })}
+        {this.buildToggableItem(
+          'Stuur waarschuwingen in de achtergrond',
+          () => {
+            return (
+              <Switch
+                style={styles.boxToggle}
+                onValueChange={() =>
+                  this.storeData({
+                    sendWarnings: !this.state.sendWarnings,
+                  })
+                }
+                value={this.state.sendWarnings}
+              />
+            );
+          },
+        )}
         {this.buildToggableItem('Deel anonieme gebruikersdata', () => {
           return (
             <Switch
@@ -184,6 +190,9 @@ export default class SettingsView extends React.PureComponent {
             />
           );
         })}
+        <View style={styles.emptyBox} />
+
+        <Text style={styles.text}>UUID: {this.state.deviceId}</Text>
         {this.buildButtonItem('Versie regelgevingsbestanden')}
         {this.buildRoutableItem('Juridische kennisgeving', 'LegalNotice')}
         <View style={styles.emptyBox} />
@@ -207,13 +216,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 15,
     marginHorizontal: 22,
-    marginBottom: 5,
   },
   title: {
     fontSize: 24,
     marginHorizontal: 2,
   },
   text: {
+    marginTop: 5,
     marginBottom: 7,
     marginHorizontal: 22,
     color: 'grey',
@@ -235,11 +244,11 @@ const styles = StyleSheet.create({
   },
   boxTextLight: {
     paddingVertical: 13,
-    color: 'grey'
+    color: 'grey',
   },
   boxTextClickable: {
     paddingVertical: 13,
-    color: 'blue'
+    color: 'blue',
   },
   boxToggle: {
     marginVertical: 6,
