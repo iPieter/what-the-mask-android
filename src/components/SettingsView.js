@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   boxTextClickable: {
     paddingVertical: 13,
-    color: 'blue',
+    color: 'rgb(48,127,250)',
   },
   boxToggle: {
     marginVertical: 6,
