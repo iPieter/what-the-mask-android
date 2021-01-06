@@ -87,7 +87,7 @@ export default class LegalNoticeView extends React.PureComponent {
           {"\n"}
           De app kan notificaties of zogenaamde push berichten sturen.
         </Text>
-        <Text style={styles.subheader}>Apparaattoestemmingen</Text>
+        <Text style={styles.subheader}>Toepassingen van derden</Text>
         <Text style={styles.text}>
           Deze app wordt gedownload via een App Store van derden. Lees de
           relevante privacyverklaringen van de desbetreffende aanbieders na.
