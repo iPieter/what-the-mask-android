@@ -26,7 +26,7 @@ function App() {
           })}
         />
         <Stack.Screen name="Settings" component={SettingsView} options={{ title: 'Instellingen' }}/>
-        <Stack.Screen name="LegalNotice" component={LegalNoticeView} options={{ title: 'Juridische kennisgeving' }}/>
+        <Stack.Screen name="LegalNotice" component={LegalNoticeView} options={{ title: 'Servicevoorwaarden' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

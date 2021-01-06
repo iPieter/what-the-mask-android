@@ -194,7 +194,7 @@ export default class SettingsView extends React.PureComponent {
 
         <Text style={styles.text}>UUID: {this.state.deviceId}</Text>
         {this.buildButtonItem('Versie regelgevingsbestanden')}
-        {this.buildRoutableItem('Juridische kennisgeving', 'LegalNotice')}
+        {this.buildRoutableItem('Servicevoorwaarden & Juridische Informatie', 'LegalNotice')}
         <View style={styles.emptyBox} />
       </View>
     );
