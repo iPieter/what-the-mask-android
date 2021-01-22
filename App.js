@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, Button, LogoTitle} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MapView from 'react-native-maps';
@@ -18,9 +19,12 @@ function App() {
           component={HomeView}
           options={({navigation, route}) => ({
             headerRight: () => (
-              <Button
+              <Icon
                 onPress={() => navigation.navigate('Settings')}
-                title="Instellingen"
+                name="cog"
+                type="font-awesome"
+                size={25}
+                style={{ marginRight: 10 }}
               />
             ),
           })}
