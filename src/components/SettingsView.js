@@ -40,6 +40,7 @@ export default class SettingsView extends React.PureComponent {
   storeData(data) {
     Settings.set(data);
     this.setState(data);
+    console.log(data);
   }
 
   buildRoutableItem(title, route) {
@@ -134,9 +135,9 @@ export default class SettingsView extends React.PureComponent {
             return (
               <Switch
                 style={styles.boxToggle}
-                onValueChange={(switchValue) =>
+                onValueChange={() =>
                   this.storeData({
-                    sendWarnings: {switchValue},
+                    sendWarnings: !this.state.sendWarnings,
                   })
                 }
                 value={this.state.sendWarnings}
@@ -147,13 +148,13 @@ export default class SettingsView extends React.PureComponent {
         {this.buildToggableItem('Deel anonieme gebruikersdata', () => {
           return (
             <Switch
+              value={this.state.shareData}
               style={styles.boxToggle}
               onValueChange={() =>
                 this.storeData({
                   shareData: !this.state.shareData,
                 })
               }
-              value={this.state.shareData}
             />
           );
         })}
