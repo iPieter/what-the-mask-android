@@ -46,6 +46,11 @@ To simulate the application on an iOS device, run in two separate terminals
 npx react-native start
 npx react-native run-ios
 ```
+To run on a connected device, e.g. Max's iPhone: 
+```
+npx react-native start
+npx react-native run-ios --device "Max's iPhone"
+```
 
 ## Troubleshooting
 
