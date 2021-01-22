@@ -23,7 +23,7 @@ export default class SettingsView extends React.PureComponent {
     }
 
     if (Settings.get('shareData') == null) {
-      this.storeData({shareData: false});
+      this.storeData({shareData: true});
     }
 
     // LOAD STATE
@@ -127,39 +127,6 @@ export default class SettingsView extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Specifieke regelgeving</Text>
-        <Text style={styles.text}>
-          Sommige steden en gemeentes laten het toe om een mondmasker af te
-          zetten tijdens het sporten of fietsen, andere niet. Je kunt dus
-          instellen voor welke regelgeving je meldingen wilt krijgen.
-        </Text>
-        <SegmentedControl
-          style={styles.item}
-          values={['Wandelen', 'Sporten', 'Fietsen', 'AI (premium)']}
-          selectedIndex={this.state.selectedIndex}
-          onChange={(event) => {
-            this.storeData({
-              selectedIndex: event.nativeEvent.selectedSegmentIndex,
-            });
-          }}
-        />
-        <Text style={styles.header}>Premium</Text>
-        {this.buildToggableItem('Detecteer activiteiten automatisch', () => {
-          return (
-            <Switch
-              style={styles.boxToggle}
-              onValueChange={() =>
-                this.storeData({
-                  automaticDetection: !this.state.automaticDetection,
-                })
-              }
-              value={this.state.automaticDetection}
-            />
-          );
-        })}
-        {this.buildRoutableItem('Statistieken')}
-        <View style={styles.emptyBox} />
-
         <Text style={styles.header}>Algemene instellingen</Text>
         {this.buildToggableItem(
           'Stuur waarschuwingen in de achtergrond',
@@ -167,9 +134,9 @@ export default class SettingsView extends React.PureComponent {
             return (
               <Switch
                 style={styles.boxToggle}
-                onValueChange={() =>
+                onValueChange={(switchValue) =>
                   this.storeData({
-                    sendWarnings: !this.state.sendWarnings,
+                    sendWarnings: {switchValue},
                   })
                 }
                 value={this.state.sendWarnings}
@@ -190,12 +157,8 @@ export default class SettingsView extends React.PureComponent {
             />
           );
         })}
-        <View style={styles.emptyBox} />
-
-        <Text style={styles.text}>UUID: {this.state.deviceId}</Text>
         {this.buildButtonItem('Versie regelgevingsbestanden')}
         {this.buildRoutableItem('Servicevoorwaarden & Juridische Informatie', 'LegalNotice')}
-        <View style={styles.emptyBox} />
       </View>
     );
   }
@@ -216,6 +179,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 15,
     marginHorizontal: 22,
+    marginBottom:15,
   },
   title: {
     fontSize: 24,
