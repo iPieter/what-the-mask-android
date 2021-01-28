@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Settings} from 'react-native';
+import {View, Text, StyleSheet, Settings, Platform} from 'react-native';
 import MapView, {Marker, Geojson} from 'react-native-maps';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -24,9 +24,21 @@ export default class HomeView extends React.PureComponent {
       deviceId = Settings.get('deviceId');
     }
 
+    let initialPosition;
+    if (Platform.OS == 'android') {
+      initialPosition = {
+        latitude: 50.85,
+        longitude: 4.35,
+        latitudeDelta: 2.5,
+        longitudeDelta: 2.5
+      };
+    } else {
+      initialPosition = null;
+    }
+
     this.state = {
-      myPosition: null,
-      region: null,
+      myPosition: initialPosition,
+      region: initialPosition,
       followLocation: true,
       lastState: false,
       geojson: null,
