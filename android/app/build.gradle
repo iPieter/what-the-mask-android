@@ -130,6 +130,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.bat"
         minSdkVersion rootProject.ext.minSdkVersion
