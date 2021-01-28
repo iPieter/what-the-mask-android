@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "771903170285",
+    "project_id": "what-the-mask",
+    "storage_bucket": "what-the-mask.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771903170285:android:4572750093fdf74a168ee4",
+        "android_client_info": {
+          "package_name": "com.bat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771903170285-o7gr65c01v74ouica4abj6gc2ecav9a8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFBcBGK61vsZ5H9wQS7CSaUnb8B2hD4DY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771903170285-o7gr65c01v74ouica4abj6gc2ecav9a8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

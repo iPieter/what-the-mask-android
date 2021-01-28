@@ -1,5 +1,7 @@
 apply plugin: "com.android.application"
 
+apply plugin: 'com.google.gms.google-services'
+
 import com.android.build.OutputFile
 
 /**
@@ -186,6 +188,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation platform('com.google.firebase:firebase-bom:26.3.0')
+
+    //implementation "com.google.firebase:firebase-messaging:17.3.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
