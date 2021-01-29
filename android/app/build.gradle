@@ -85,9 +85,6 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
-Project background_geolocation = project(':react-native-background-geolocation')
-apply from: "${background_geolocation.projectDir}/app.gradle"
-
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -198,7 +195,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:26.3.0')
 
-    //implementation "com.google.firebase:firebase-messaging:17.3.0"
+    compile project(':@mauron85_react-native-background-geolocation')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
