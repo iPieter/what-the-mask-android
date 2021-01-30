@@ -1,4 +1,4 @@
-rootProject.name = 'bat'
+rootProject.name = 'What the mask'
 include ':@mauron85_react-native-background-geolocation-common'
 project(':@mauron85_react-native-background-geolocation-common').projectDir = new File(rootProject.projectDir, '../node_modules/@mauron85/react-native-background-geolocation/android/common')
 include ':@mauron85_react-native-background-geolocation'
