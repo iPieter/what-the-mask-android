@@ -195,7 +195,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:26.3.0')
 
-    compile project(':@mauron85_react-native-background-geolocation')
+    implementation project(':@mauron85_react-native-background-geolocation')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
