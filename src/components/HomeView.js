@@ -68,8 +68,8 @@ export default class HomeView extends React.PureComponent {
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 10,
       distanceFilter: 10,
-      notificationTitle: 'WhatTheMask background tracking',
-      notificationText: 'enabled',
+      notificationTitle: 'What the mask houdt een oogje in het zeil',
+      notificationText: 'ingeschakeld',
       debug: false,
       startOnBoot: true,
       stopOnTerminate: false,
@@ -296,7 +296,10 @@ export default class HomeView extends React.PureComponent {
 
   onLocation(location) {
     console.log('[location] -', location);
-    const myPosition = location.coords;
+    const myPosition = {
+      latitude: location.latitude,
+      longitude: location.longitude
+    };
     this.setState({myPosition});
     if (this.state.followLocation) {
       let region = {
