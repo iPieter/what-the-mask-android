@@ -15,14 +15,6 @@ import com.marianhello.bgloc.react.BackgroundGeolocationPackage;  // <--- Import
 
 public class MainApplication extends Application implements ReactApplication {
 
-  @Override
-  protected List<ReactPackage> getPackages() {
-    return Arrays.<ReactPackage>asList(
-      new MainReactPackage(),
-      new BackgroundGeolocationPackage() // <---- Add the Package
-    );
-  }
-
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
         @Override
@@ -36,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+//          packages.add(new BackgroundGeolocationPackage());
           return packages;
         }
 
