@@ -83,12 +83,6 @@ export default class HomeView extends React.PureComponent {
           'pragma': 'no-cache',
           'cache-control': 'no-cache'
       },
-      // customize post properties
-      // postTemplate: {
-      //   lat: '@latitude',
-      //   lon: '@longitude',
-      //   foo: 'bar' // you can also add your own properties
-      // }
     });
 
     BackgroundGeolocation.on('location', (location) => this.onLocation(location) );
@@ -196,103 +190,6 @@ export default class HomeView extends React.PureComponent {
     // unregister all event listeners
     BackgroundGeolocation.removeAllListeners();
   }
-
-  // componentWillMount() {
-  //   ////
-  //   // 1.  Wire up event-listeners
-  //   //
-
-  //   // This handler fires whenever bgGeo receives a location update.
-  //   BackgroundGeolocation.onLocation(
-  //     (location) => this.onLocation(location),
-  //     this.onError,
-  //   );
-
-  //   // This handler fires when movement states changes (stationary->moving; moving->stationary)
-  //   BackgroundGeolocation.onMotionChange(this.onMotionChange);
-
-  //   // This event fires when a change in motion activity is detected
-  //   BackgroundGeolocation.onActivityChange(this.onActivityChange);
-
-  //   // This event fires when the user toggles location-services authorization
-  //   BackgroundGeolocation.onProviderChange(this.onProviderChange);
-
-  //   ////
-  //   // 2.  Execute #ready method (required)
-  //   //
-  //   BackgroundGeolocation.ready(
-  //     {
-  //       // Geolocation Config
-  //       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-  //       distanceFilter: 10,
-  //       // Activity Recognition
-  //       stopTimeout: 2,
-  //       // Application config
-  //       debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-  //       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-  //       stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
-  //       startOnBoot: true, // <-- Auto start tracking when device is powered-up.
-  //       // HTTP / SQLite config
-  //       url: 'http://192.168.0.20/api/locations',
-  //       batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-  //       autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
-  //       headers: {
-  //         // <-- Optional HTTP headers
-  //         'X-FOO': 'bar',
-  //       },
-  //       params: {
-  //         // <-- Optional HTTP params
-  //         auth_token: 'maybe_your_server_authenticates_via_token_YES?',
-  //       },
-  //     },
-  //     (state) => {
-  //       console.log(
-  //         '- BackgroundGeolocation is configured and ready: ',
-  //         state.enabled,
-  //       );
-
-  //       if (!state.enabled) {
-  //         ////
-  //         // 3. Start tracking!
-  //         //
-  //         BackgroundGeolocation.start(function () {
-  //           console.log('- Start success');
-  //         });
-  //       }
-  //     },
-  //   );
-  // }
-
-  // // You must remove listeners when your component unmounts
-  // componentWillUnmount() {
-  //   BackgroundGeolocation.removeListeners();
-  // }
-
-  // async componentDidMount() {
-  //   // Some code to prevent caching of the geojson file
-  //   var myHeaders = new Headers();
-  //   myHeaders.append('pragma', 'no-cache');
-  //   myHeaders.append('cache-control', 'no-cache');
-
-  //   var myInit = {
-  //     method: 'GET',
-  //     headers: myHeaders,
-  //   };
-
-  //   let response = await fetch(
-  //     'https://bat.ipieter.be/bat/policy/zones.geojson',
-  //     myInit,
-  //   );
-
-  //   if (response.ok) {
-  //     // if HTTP-status is 200-299
-  //     // get the response body (the method explained below)
-  //     let json = await response.json();
-  //     this.setState({geojson: json});
-  //   } else {
-  //     alert('HTTP-Error: ' + response.status);
-  //   }
-  // }
 
   onLocation(location) {
     console.log('[location] -', location);
