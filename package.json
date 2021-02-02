@@ -1,5 +1,5 @@
 {
-  "name": "bat",
+  "name": "What the mask",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mauron85/react-native-background-geolocation": "git+https://github.com/Gertjan423/react-native-background-geolocation.git#master",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/segmented-control": "^2.2.2",
@@ -18,7 +19,6 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-background-fetch": "^3.1.0",
-    "react-native-background-geolocation": "^3.9.3",
     "react-native-elements": "^3.0.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-get-random-values": "^1.5.0",

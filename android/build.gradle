@@ -2,13 +2,15 @@
 
 buildscript {
     ext {
-        googlePlayServicesLocationVersion = "17.0.0"
+        googlePlayServicesLocationVersion = "17+"
+        googlePlayServicesVersion = "17+"
         buildToolsVersion = "29.0.2"
         minSdkVersion = 21
         compileSdkVersion = 29
         targetSdkVersion = 29
         kotlinVersion = "1.3.72"
         appCompatVersion = "1.1.0"
+        supportLibVersion = "29.0.0"
     }
     repositories {
         google()
@@ -35,10 +37,6 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
 
-        maven {
-            // Required for react-native-background-geolocation
-            url("${project(':react-native-background-geolocation').projectDir}/libs")
-        }
         maven {
             // Required for react-native-background-fetch
             url("${project(':react-native-background-fetch').projectDir}/libs")
