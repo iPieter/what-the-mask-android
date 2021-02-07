@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MapView from 'react-native-maps';
 import HomeView from './src/components/HomeView';
+import WelcomeView from './src/components/WelcomeView';
 import SettingsView from './src/components/SettingsView';
 import LegalNoticeView from './src/components/LegalNoticeView';
 
@@ -29,6 +30,7 @@ function App() {
             ),
           })}
         />
+        <Stack.Screen name="Welcome" component={WelcomeView} />
         <Stack.Screen name="Settings" component={SettingsView} options={{ title: 'Instellingen' }}/>
         <Stack.Screen name="LegalNotice" component={LegalNoticeView} options={{ title: 'Servicevoorwaarden' }}/>
       </Stack.Navigator>
