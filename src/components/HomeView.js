@@ -14,6 +14,7 @@ export default class HomeView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mounted = false;
+    this.navigation = props.navigation;
 
     let deviceId;
     if (Settings.get('deviceId') == null) {
@@ -62,6 +63,17 @@ export default class HomeView extends React.PureComponent {
       },
     );
   }
+
+  async onScreenLoad() {
+      console.warn("Test2");
+  }
+  async useEffect() {
+      console.warn("Test1");
+      // if (Settings.get('sendWarnings') == null) {
+      if (true) {
+          this.navigation.navigate('Welcome');
+      };
+  };
 
   async componentDidMount() {
     BackgroundGeolocation.configure({
