@@ -65,7 +65,7 @@ export default class HomeView extends React.PureComponent {
 
   async componentDidMount() {
     BackgroundGeolocation.configure({
-      desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+      desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
       stationaryRadius: 10,
       distanceFilter: 10,
       notificationTitle: 'What the mask houdt een oogje in het zeil',
