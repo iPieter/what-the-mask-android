@@ -1,9 +1,37 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Button, Switch} from 'react-native';
+import {View, Text, StyleSheet, PermissionsAndroid, Button, Switch} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 Icon.loadFont();
+
+const requestLocation = async () => {
+    try {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+                title: "Location Permission",
+                message:
+                "What the Mask heeft toegang tot je locatie nodig" +
+                    "om je geinformeerd te houden.",
+                buttonNeutral: "Ask Me Later",
+                buttonNegative: "Cancel",
+                buttonPositive: "OK"
+            }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("Location permissions granted");
+            return true;
+        } else {
+            console.log("Location permissions denied");
+            return false;
+        }
+    } catch (err) {
+        console.warn(err);
+        return false;
+    }
+};
+
 export default class WelcomeViewB extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -22,6 +50,7 @@ export default class WelcomeViewB extends React.PureComponent {
               </Text>
               <Button
           onPress={() => {
+              requestLocation();
               this.navigation.navigate('Background');
           }}
           title="Inschakelen"

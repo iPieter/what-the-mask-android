@@ -5,6 +5,34 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Icon.loadFont();
+
+const requestBackground = async () => {
+    try {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+            {
+                title: "Location Permission",
+                message:
+                "What the Mask heeft toegang tot je locatie nodig" +
+                    "om je notificaties te kunnen sturen.",
+                buttonNeutral: "Ask Me Later",
+                buttonNegative: "Cancel",
+                buttonPositive: "OK"
+            }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("Location permissions granted");
+            return true;
+        } else {
+            console.log("Location permissions denied");
+            return false;
+        }
+    } catch (err) {
+        console.warn(err);
+        return false;
+    }
+};
+
 export default class WelcomeViewC extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -29,7 +57,8 @@ export default class WelcomeViewC extends React.PureComponent {
               </Text>
               <Button
           onPress={() => {
-              this.setData({'sendWarnings': true});
+              const res = requestBackground();
+              this.setData({'sendWarnings': res});
               this.navigation.navigate('Home');
           }}
           title="Inschakelen"
