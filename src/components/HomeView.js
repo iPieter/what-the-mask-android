@@ -68,8 +68,8 @@ export default class HomeView extends React.PureComponent {
   async getData(key) {
       if (Platform.OS == 'android') {
           try {
-              const res = await AsyncStorage.getItem(key);
-              return res;
+              const settings = await AsyncStorage.getItem('settings');
+              return JSON.parse(settings)[key];
           } catch (e) {
               console.warn(e);
               return null;
@@ -79,11 +79,11 @@ export default class HomeView extends React.PureComponent {
       };
   };
 
-  async setData(key, value) {
+  async setData(data) {
       if (Platform.OS == 'android') {
-          await AsyncStorage.setItem(key, value);
+          await AsyncStorage.mergeItem('settings',JSON.stringify(data));
       } else {
-          Settings.set({key: value});
+          Settings.set(data);
       };
   };
 
@@ -91,7 +91,7 @@ export default class HomeView extends React.PureComponent {
     warnings = await this.getData('sendWarnings');
     if (warnings == null) {
         this.navigation.replace('Welcome');
-        return () => { this.setData('sendWarnings', false); };
+        return () => { this.setData({'sendWarnings': false}); };
     };
 
     BackgroundGeolocation.configure({

@@ -11,11 +11,11 @@ export default class WelcomeViewC extends React.PureComponent {
     this.navigation = props.navigation;
   }
 
-  async setData(key, value) {
+  async setData(data) {
       if (Platform.OS == 'android') {
-          await AsyncStorage.setItem(key, value);
+          await AsyncStorage.mergeItem('settings',JSON.stringify(data));
       } else {
-          Settings.set({key: value});
+          Settings.set(data);
       };
   };
 
@@ -29,14 +29,14 @@ export default class WelcomeViewC extends React.PureComponent {
               </Text>
               <Button
           onPress={() => {
-              this.setData('sendWarnings', 'true');
+              this.setData({'sendWarnings': true});
               this.navigation.navigate('Home');
           }}
           title="Inschakelen"
               />
               <Button
           onPress={() => {
-              this.setData('sendWarnings', 'false');
+              this.setData({'sendWarnings': false});
               this.navigation.navigate('Home');
           }}
           title="Nee bedankt"

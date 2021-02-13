@@ -12,28 +12,35 @@ export default class SettingsView extends React.PureComponent {
 
     const selectedIndex = async () => { return await this.getData('selectedIndex'); };
     if (selectedIndex == null) { async () => {
-        this.setData('selectedIndex', '0');
-        this.setData('automaticDetection', 'false');
-        this.setData('shareData', 'true');
+        this.storeData({'selectedIndex': 0});
+        this.storeData({'automaticDetection': false});
+        this.storeData({'shareData': true});
       };
     };
 
     // LOAD STATE
-    this.state = {
-      latestUpdate: null,
-      selectedIndex: this.getData('selectedIndex'),
-      automaticDetection: this.getData('automaticDetection'),
-      sendWarnings: this.getData('sendWarnings'),
-      shareData: this.getData('shareData'),
-      deviceId: this.getData('deviceId'),
+    this.state = async () => {
+      const selectedIndex = await this.getData('selectedIndex');
+      const automaticDetection = await this.getData('automaticDetection');
+      const sendWarnings = await this.getData('sendWarnings');
+      const shareData = await this.getData('shareData');
+      const deviceId = await this.getData('deviceId');
+      return {
+        latestUpdate: null,
+        selectedIndex: selectedIndex,
+        automaticDetection: automaticDetection,
+        sendWarnings: sendWarnings,
+        shareData: shareData,
+        deviceId: deviceId
+      };
     };
-  }
+  };
 
   async getData(key) {
       if (Platform.OS == 'android') {
           try {
-              const res = await AsyncStorage.getItem(key);
-              return res;
+              const settings = await AsyncStorage.getItem('settings');
+              return JSON.parse(settings)[key];
           } catch (e) {
               console.warn(e);
               return null;
@@ -43,18 +50,18 @@ export default class SettingsView extends React.PureComponent {
       };
   };
 
-  async setData(key, value) {
+  async setData(data) {
       if (Platform.OS == 'android') {
-          await AsyncStorage.setItem(key, value);
+          await AsyncStorage.mergeItem('settings',JSON.stringify(data));
       } else {
-          Settings.set({key: value});
+          Settings.set(data);
       };
   };
 
-  async storeData(key, value) {
-    this.setData(key, value);
-    this.setState({key: value});
-    console.log({key: value});
+  async storeData(data) {
+    this.setData(data);
+    this.setState(data);
+    console.log(data);
   }
 
   buildRoutableItem(title, route) {
@@ -150,7 +157,7 @@ export default class SettingsView extends React.PureComponent {
               <Switch
                 style={styles.boxToggle}
                 onValueChange={() =>
-                  this.storeData('sendWarnings', !this.state.sendWarnings)
+                  this.storeData({'sendWarnings': !this.state.sendWarnings})
                 }
                 value={this.state.sendWarnings}
               />
@@ -163,7 +170,7 @@ export default class SettingsView extends React.PureComponent {
               value={this.state.shareData}
               style={styles.boxToggle}
               onValueChange={() =>
-                this.storeData('shareData', !this.state.shareData)
+                this.storeData({'shareData': !this.state.shareData})
               }
             />
           );
