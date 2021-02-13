@@ -5,7 +5,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MapView from 'react-native-maps';
 import HomeView from './src/components/HomeView';
-import WelcomeView from './src/components/WelcomeView';
+import WelcomeViewA from './src/components/WelcomeViewA';
+import WelcomeViewB from './src/components/WelcomeViewB';
+import WelcomeViewC from './src/components/WelcomeViewC';
 import SettingsView from './src/components/SettingsView';
 import LegalNoticeView from './src/components/LegalNoticeView';
 
@@ -30,7 +32,9 @@ function App() {
             ),
           })}
         />
-        <Stack.Screen name="Welcome" component={WelcomeView} />
+        <Stack.Screen name="Welcome" component={WelcomeViewA} />
+        <Stack.Screen name="Location" component={WelcomeViewB} />
+        <Stack.Screen name="Background" component={WelcomeViewC} />
         <Stack.Screen name="Settings" component={SettingsView} options={{ title: 'Instellingen' }}/>
         <Stack.Screen name="LegalNotice" component={LegalNoticeView} options={{ title: 'Servicevoorwaarden' }}/>
       </Stack.Navigator>
