@@ -1,9 +1,13 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Button, Switch} from 'react-native';
+import {View, Text, Image, StyleSheet, Switch} from 'react-native';
+import { Button } from 'react-native-elements';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 Icon.loadFont();
+
+const icon = require('../../res/icon.png');
+
 export default class WelcomeViewA extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -14,10 +18,13 @@ export default class WelcomeViewA extends React.PureComponent {
       return (
               <View style={styles.container}>
               <Text style={styles.header}>Welkom bij What the Mask!</Text>
+              <Image style={styles.icon} source={icon}/>
+              <View style={styles.bottomArea}>
               <Button
           onPress={() => this.navigation.navigate('Location')}
           title="Next"
               />
+              </View>
               </View>
       );
   }
@@ -31,6 +38,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    resizeMode: 'contain',
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+  },
+  bottomArea: {
+    width: '100%',
+    bottom: 0,
+    position: 'absolute',
   },
   item: {
     marginHorizontal: 20,
