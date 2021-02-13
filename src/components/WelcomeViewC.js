@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Button, Switch, Settings} from 'react-native';
+import {View, Text, StyleSheet, PermissionsAndroid, Switch, Settings} from 'react-native';
+import { Button } from 'react-native-elements';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -55,7 +56,17 @@ export default class WelcomeViewC extends React.PureComponent {
               <Text style={styles.text}>
               Indien je ervoor kiest om notificaties te ontvangen wanneer je een mondmasker zone betreedt, dien je toegang tot je locatie te verschaffen, ook wanneer de app niet geopend is.
               </Text>
+              <View style={styles.bottomArea}>
               <Button
+          buttonStyle={styles.refuse}
+          onPress={() => {
+              this.setData({'sendWarnings': false});
+              this.navigation.navigate('Home');
+          }}
+          title="Nee bedankt"
+              />
+              <Button
+          buttonStyle={styles.accept}
           onPress={() => {
               const res = requestBackground();
               this.setData({'sendWarnings': res});
@@ -63,14 +74,8 @@ export default class WelcomeViewC extends React.PureComponent {
           }}
           title="Inschakelen"
               />
-              <Button
-          onPress={() => {
-              this.setData({'sendWarnings': false});
-              this.navigation.navigate('Home');
-          }}
-          title="Nee bedankt"
-              />
               </View>
+          </View>
       );
   }
 }
@@ -83,6 +88,23 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  bottomArea: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      bottom: 0,
+      position: 'absolute',
+  },
+  refuse: {
+      width: '80%',
+      left: 0,
+      backgroundColor: '#ff6347',
+  },
+  accept: {
+      width: '80%',
+      right: 0,
+      backgroundColor: '#04B404',
   },
   item: {
     marginHorizontal: 20,
