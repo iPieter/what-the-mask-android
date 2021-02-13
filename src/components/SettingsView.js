@@ -2,6 +2,7 @@ import * as React from 'react';
 import {View, Text, StyleSheet, Switch, Settings} from 'react-native';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Icon.loadFont();
 export default class SettingsView extends React.PureComponent {
@@ -9,38 +10,51 @@ export default class SettingsView extends React.PureComponent {
     super(props);
     this.navigation = props.navigation;
 
-    // DEFAULTS
-    if (Settings.get('selectedIndex') == null) {
-      this.storeData({selectedIndex: 0});
-    }
-
-    if (Settings.get('automaticDetection') == null) {
-      this.storeData({automaticDetection: false});
-    }
-
-    if (Settings.get('sendWarnings') == null) {
-      this.storeData({sendWarnings: true});
-    }
-
-    if (Settings.get('shareData') == null) {
-      this.storeData({shareData: true});
-    }
+    const selectedIndex = async () => { return await this.getData('selectedIndex'); };
+    if (selectedIndex == null) { async () => {
+        this.setData('selectedIndex', '0');
+        this.setData('automaticDetection', 'false');
+        this.setData('shareData', 'true');
+      };
+    };
 
     // LOAD STATE
     this.state = {
       latestUpdate: null,
-      selectedIndex: Settings.get('selectedIndex'),
-      automaticDetection: Settings.get('automaticDetection'),
-      sendWarnings: Settings.get('sendWarnings'),
-      shareData: Settings.get('shareData'),
-      deviceId: Settings.get('deviceId'),
+      selectedIndex: this.getData('selectedIndex'),
+      automaticDetection: this.getData('automaticDetection'),
+      sendWarnings: this.getData('sendWarnings'),
+      shareData: this.getData('shareData'),
+      deviceId: this.getData('deviceId'),
     };
   }
 
-  storeData(data) {
-    Settings.set(data);
-    this.setState(data);
-    console.log(data);
+  async getData(key) {
+      if (Platform.OS == 'android') {
+          try {
+              const res = await AsyncStorage.getItem(key);
+              return res;
+          } catch (e) {
+              console.warn(e);
+              return null;
+          }
+      } else {
+          return Settings.get(key);
+      };
+  };
+
+  async setData(key, value) {
+      if (Platform.OS == 'android') {
+          await AsyncStorage.setItem(key, value);
+      } else {
+          Settings.set({key: value});
+      };
+  };
+
+  async storeData(key, value) {
+    this.setData(key, value);
+    this.setState({key: value});
+    console.log({key: value});
   }
 
   buildRoutableItem(title, route) {
@@ -136,9 +150,7 @@ export default class SettingsView extends React.PureComponent {
               <Switch
                 style={styles.boxToggle}
                 onValueChange={() =>
-                  this.storeData({
-                    sendWarnings: !this.state.sendWarnings,
-                  })
+                  this.storeData('sendWarnings', !this.state.sendWarnings)
                 }
                 value={this.state.sendWarnings}
               />
@@ -151,9 +163,7 @@ export default class SettingsView extends React.PureComponent {
               value={this.state.shareData}
               style={styles.boxToggle}
               onValueChange={() =>
-                this.storeData({
-                  shareData: !this.state.shareData,
-                })
+                this.storeData('shareData', !this.state.shareData)
               }
             />
           );

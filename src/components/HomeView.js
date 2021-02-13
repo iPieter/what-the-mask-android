@@ -7,6 +7,7 @@ import {Notifications} from 'react-native-notifications';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Icon.loadFont();
 
@@ -17,11 +18,11 @@ export default class HomeView extends React.PureComponent {
     this.navigation = props.navigation;
 
     let deviceId;
-    if (Settings.get('deviceId') == null) {
+    if (this.getData('deviceId') == null) {
       deviceId = uuidv4();
-      Settings.set({deviceId: deviceId});
+      this.SetData('deviceId', deviceId);
     } else {
-      deviceId = Settings.get('deviceId');
+      deviceId = this.getData('deviceId');
     }
 
     let initialPosition;
@@ -64,18 +65,35 @@ export default class HomeView extends React.PureComponent {
     );
   }
 
-  async onScreenLoad() {
-      console.warn("Test2");
-  }
-  async useEffect() {
-      console.warn("Test1");
-      // if (Settings.get('sendWarnings') == null) {
-      if (true) {
-          this.navigation.navigate('Welcome');
+  async getData(key) {
+      if (Platform.OS == 'android') {
+          try {
+              const res = await AsyncStorage.getItem(key);
+              return res;
+          } catch (e) {
+              console.warn(e);
+              return null;
+          }
+      } else {
+          return Settings.get(key);
+      };
+  };
+
+  async setData(key, value) {
+      if (Platform.OS == 'android') {
+          await AsyncStorage.setItem(key, value);
+      } else {
+          Settings.set({key: value});
       };
   };
 
   async componentDidMount() {
+    warnings = await this.getData('sendWarnings');
+    if (warnings == null) {
+        this.navigation.replace('Welcome');
+        return () => { this.setData('sendWarnings', false); };
+    };
+
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
       stationaryRadius: 10,
