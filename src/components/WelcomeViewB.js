@@ -1,36 +1,46 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, PermissionsAndroid, Switch} from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+  View,
+  Text,
+  StyleSheet,
+  PermissionsAndroid,
+  TouchableOpacity,
+  Switch,
+  Image,
+} from 'react-native';
+import {Button} from 'react-native-elements';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 Icon.loadFont();
 
+const icon = require('../../res/welcome_screen_illustration_b.png');
+
 const requestLocation = async () => {
-    try {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-                title: "Location Permission",
-                message:
-                "What the Mask heeft toegang tot je locatie nodig" +
-                    "om je geinformeerd te houden.",
-                buttonNeutral: "Ask Me Later",
-                buttonNegative: "Cancel",
-                buttonPositive: "OK"
-            }
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("Location permissions granted");
-            return true;
-        } else {
-            console.log("Location permissions denied");
-            return false;
-        }
-    } catch (err) {
-        console.warn(err);
-        return false;
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Location Permission',
+        message:
+          'What the Mask heeft toegang tot je locatie nodig' +
+          'om je geinformeerd te houden.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('Location permissions granted');
+      return true;
+    } else {
+      console.log('Location permissions denied');
+      return false;
     }
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
 };
 
 export default class WelcomeViewB extends React.PureComponent {
@@ -40,62 +50,79 @@ export default class WelcomeViewB extends React.PureComponent {
   }
 
   render() {
-      return (
-              <View style={styles.container}>
-              <Text style={styles.header}>Locatie gegevens</Text>
-              <Text style={styles.text}>
-              Om de mondmaskerplicht kaart te bekijken, dien je toegang tot je huidige locatie te verschaffen.
-              </Text>
-              <Text style={styles.text}>
-              Je locatie wordt op geen enkel moment opgeslagen, doorverkocht, of gebruikt voor advertentie doeleinden.
-              </Text>
-              <View style={styles.bottomArea}>
-              <Button
-          buttonStyle={styles.refuse}
-          onPress={() => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>Locatiegegevens</Text>
+
+        <Image style={styles.icon} source={icon} />
+        <Text style={styles.text}>
+          Op de kaart tonen we je locatie en waar je een mondmasker moet dragen.
+          'What the mask' kan echter alleen maar je huidige locatie tonen als je
+          daar expliciet toestemming voor geeft. Als je dat niet wilt, is de app
+          nog perfect bruikbaar, alleen zie je jouw huidige locatie niet.
+        </Text>
+        <View style={styles.bottomArea}>
+          <TouchableOpacity
+            style={[styles.refuse, styles.button]}
+            onPress={() => {
               this.navigation.navigate('Background');
-          }}
-          title="Nee bedankt"
-              />
-              <Button
-          buttonStyle={styles.accept}
-          onPress={() => {
+            }}>
+            <Text style={styles.buttonText}>Nee bedankt</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.accept, styles.button]}
+            onPress={() => {
               requestLocation();
               this.navigation.navigate('Background');
-          }}
-          title="Inschakelen"
-              />
-              </View>
-              </View>
-      );
+            }}>
+            <Text style={styles.buttonText}>Inschakelen</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  text: {
-      color: '#fff',
-      fontSize: 30,
-      fontWeight: 'bold'
-  },
   container: {
     flex: 1,
+    alignItems: 'center',
+  },
+  button: {
+    height: 40,
+    borderRadius: 7,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    height: '100%',
+    margin: 10,
+    fontSize: 17,
+    fontWeight: '500',
+  },
+  icon: {
+    justifyContent: 'center',
+    resizeMode: 'contain',
+    width: '70%',
+    height: undefined,
+    aspectRatio: 1,
   },
   bottomArea: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      bottom: 0,
-      position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    margin: '10%',
+    position: 'absolute',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   refuse: {
-      width: '80%',
-      left: 0,
-      backgroundColor: '#ff6347',
+    width: '45%',
+    backgroundColor: '#ff6347',
   },
   accept: {
-      width: '80%',
-      right: 0,
-      backgroundColor: '#04B404',
+    width: '45%',
+    backgroundColor: '#04B404',
   },
   item: {
     marginHorizontal: 20,
@@ -104,11 +131,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#444',
   },
   header: {
-    fontSize: 24,
+    marginTop: '5%',
+    color: '#2c3e50',
+    marginBottom: '5%',
+    fontSize: 25,
     fontWeight: '700',
-    marginTop: 15,
-    marginHorizontal: 22,
-    marginBottom:15,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -118,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 7,
     marginHorizontal: 22,
-    color: 'grey',
+    color: '#7f8c8d',
   },
   box: {
     paddingHorizontal: 20,
