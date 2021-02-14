@@ -10,13 +10,16 @@ export default class SettingsView extends React.PureComponent {
     super(props);
     this.navigation = props.navigation;
 
-    const selectedIndex = async () => { return await this.getData('selectedIndex'); };
-    if (selectedIndex == null) { async () => {
-        this.storeData({'selectedIndex': 0});
-        this.storeData({'automaticDetection': false});
-        this.storeData({'shareData': true});
-      };
+    const selectedIndex = async () => {
+      return await this.getData('selectedIndex');
     };
+    if (selectedIndex == null) {
+      async () => {
+        this.storeData({selectedIndex: 0});
+        this.storeData({automaticDetection: false});
+        this.storeData({shareData: true});
+      };
+    }
 
     // LOAD STATE
     this.state = async () => {
@@ -31,32 +34,32 @@ export default class SettingsView extends React.PureComponent {
         automaticDetection: automaticDetection,
         sendWarnings: sendWarnings,
         shareData: shareData,
-        deviceId: deviceId
+        deviceId: deviceId,
       };
     };
-  };
+  }
 
   async getData(key) {
-      if (Platform.OS == 'android') {
-          try {
-              const settings = await AsyncStorage.getItem('settings');
-              return JSON.parse(settings)[key];
-          } catch (e) {
-              console.warn(e);
-              return null;
-          }
-      } else {
-          return Settings.get(key);
-      };
-  };
+    if (Platform.OS == 'android') {
+      try {
+        const settings = await AsyncStorage.getItem('settings');
+        return JSON.parse(settings)[key];
+      } catch (e) {
+        console.warn(e);
+        return null;
+      }
+    } else {
+      return Settings.get(key);
+    }
+  }
 
   async setData(data) {
-      if (Platform.OS == 'android') {
-          await AsyncStorage.mergeItem('settings',JSON.stringify(data));
-      } else {
-          Settings.set(data);
-      };
-  };
+    if (Platform.OS == 'android') {
+      await AsyncStorage.mergeItem('settings', JSON.stringify(data));
+    } else {
+      Settings.set(data);
+    }
+  }
 
   async storeData(data) {
     this.setData(data);
@@ -157,7 +160,7 @@ export default class SettingsView extends React.PureComponent {
               <Switch
                 style={styles.boxToggle}
                 onValueChange={() =>
-                  this.storeData({'sendWarnings': !this.state.sendWarnings})
+                  this.storeData({sendWarnings: !this.state.sendWarnings})
                 }
                 value={this.state.sendWarnings}
               />
@@ -170,13 +173,17 @@ export default class SettingsView extends React.PureComponent {
               value={this.state.shareData}
               style={styles.boxToggle}
               onValueChange={() =>
-                this.storeData({'shareData': !this.state.shareData})
+                this.storeData({shareData: !this.state.shareData})
               }
             />
           );
         })}
         {this.buildButtonItem('Versie regelgevingsbestanden')}
-        {this.buildRoutableItem('Servicevoorwaarden & Juridische Informatie', 'LegalNotice')}
+        {this.buildRoutableItem(
+          'Servicevoorwaarden & Juridische Informatie',
+          'LegalNotice',
+        )}
+        <View style={styles.emptyBox} />
       </View>
     );
   }
@@ -197,7 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 15,
     marginHorizontal: 22,
-    marginBottom:15,
+    marginBottom: 15,
   },
   title: {
     fontSize: 24,
