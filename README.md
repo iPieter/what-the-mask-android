@@ -32,27 +32,20 @@ Our technology stack is as follows:
 ## Getting started
 
 First make sure you have installed
-- [XCode](https://developer.apple.com/xcode/)
 - [Node](https://www.npmjs.com/)
 - [Cocoapods](https://cocoapods.org/)
 
 To get up and running quickly, use the following commands:
 ```
 npm install
-cd ios
-pod install
 ```
 
-To simulate the application on an iOS device, run in two separate terminals
+To simulate the application on an Android device, run in two separate terminals
 ```
 npx react-native start
-npx react-native run-ios
+npx react-native run-android
 ```
-To run on a connected device, e.g. Max's iPhone: 
-```
-npx react-native start
-npx react-native run-ios --device "Max's iPhone"
-```
+
 
 ## Troubleshooting
 
