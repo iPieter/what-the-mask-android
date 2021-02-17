@@ -100,7 +100,7 @@ export default class LegalNoticeView extends React.PureComponent {
           een correctie wilt aangeven of een vraag heeft over deze
           Servicevoorwaarden, Juridische informatie en privacyverklaring, kan
           u ons contacteren via
-          ...
+          team@whatthemask.be
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -110,7 +110,6 @@ export default class LegalNoticeView extends React.PureComponent {
 
 // TODOs
 // - info over statistieken
-// - contactgegevens aanvullen
 // - MIT/apache packages
 
 const styles = StyleSheet.create({
