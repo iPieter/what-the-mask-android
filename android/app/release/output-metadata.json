@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.bat",
+  "applicationId": "be.whatthemask",
   "variantName": "processReleaseResources",
   "elements": [
     {

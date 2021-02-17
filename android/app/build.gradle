@@ -135,7 +135,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.bat"
+        applicationId "be.whatthemask"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

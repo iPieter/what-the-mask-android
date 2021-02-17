@@ -61,3 +61,6 @@ buck-out/
 # API KEYS
 android/app/google-services.json
 android/app/src/main/AndroidManifest.xml
+*.aab
+
+*.hprof

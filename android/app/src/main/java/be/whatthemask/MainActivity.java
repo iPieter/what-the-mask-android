@@ -1,4 +1,4 @@
-package com.bat;
+package be.whatthemask;
 
 import com.facebook.react.ReactActivity;
 
