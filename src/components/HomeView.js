@@ -108,11 +108,6 @@ export default class HomeView extends React.PureComponent {
       fastestInterval: 5000,
       activitiesInterval: 10000,
       stopOnStillActivity: false,
-      url: 'http://192.168.81.15:3000/location',
-      httpHeaders: {
-          'pragma': 'no-cache',
-          'cache-control': 'no-cache'
-      },
     });
 
     BackgroundGeolocation.on('location', (location) => this.onLocation(location) );
@@ -129,7 +124,7 @@ export default class HomeView extends React.PureComponent {
 
     BackgroundGeolocation.on('stationary', (stationaryLocation) => {
       // handle stationary locations here
-      Actions.sendLocation(stationaryLocation);
+      // Actions.sendLocation(stationaryLocation);
     });
 
     BackgroundGeolocation.on('error', (error) => {
