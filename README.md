@@ -4,8 +4,8 @@
 
 
 
-## What the mask · iOS Application
-_if you're looking for the Android version, you can find it [here »](https://github.com/iPieter/what-the-mask-ios)_
+## What the mask · Android Application
+_if you're looking for the iOS version, you can find it [here »](https://github.com/iPieter/what-the-mask-ios)_
 
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 
