@@ -2,10 +2,12 @@
     <img src="res/what-the-mask-logo.png" alt="alternate text" width="60%">
  </p>
 
-![Python](https://img.shields.io/badge/python-v3.7+-blue.svg)
-![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 
-## What the mask
+
+## What the mask · iOS Application
+_if you're looking for the Android version, you can find it [here »](https://github.com/iPieter/what-the-mask-ios)_
+
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 
 Where in Flanders is a face mask obligatory? This app warns you when you enter or leave a face mask zone.
 
