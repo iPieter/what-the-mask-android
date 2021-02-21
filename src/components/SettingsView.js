@@ -10,44 +10,62 @@ export default class SettingsView extends React.PureComponent {
     super(props);
     this.navigation = props.navigation;
 
-    const selectedIndex = async () => {
-      return await this.getData('selectedIndex');
-    };
-    if (selectedIndex == null) {
-      async () => {
-        this.storeData({selectedIndex: 0});
-        this.storeData({automaticDetection: false});
-        this.storeData({shareData: true});
-      };
-    }
+    this.state = {};
+  }
 
-    // LOAD STATE
-    this.state = async () => {
-      const selectedIndex = await this.getData('selectedIndex');
-      const automaticDetection = await this.getData('automaticDetection');
-      const sendWarnings = await this.getData('sendWarnings');
-      const shareData = await this.getData('shareData');
-      const deviceId = await this.getData('deviceId');
-      return {
-        latestUpdate: null,
-        selectedIndex: selectedIndex,
-        automaticDetection: automaticDetection,
-        sendWarnings: sendWarnings,
-        shareData: shareData,
-        deviceId: deviceId,
-      };
-    };
+  async componentDidMount() {
+      const initSelectedIndex = await this.getData('selectedIndex');
+      if (initSelectedIndex == null || initSelectedIndex == undefined) {
+        await this.setData({selectedIndex: 0});
+        await this.setData({automaticDetection: false});
+      }
+
+      // LOAD STATE
+      this.state = await this.getStorageState();
+      await this.setState(this.state);
+      // const selectedIndex = await this.getData('selectedIndex');
+      // const automaticDetection = await this.getData('automaticDetection');
+      // const sendWarnings = await this.getData('sendWarnings');
+      // const shareData = await this.getData('shareData');
+      // const deviceId = await this.getData('deviceId');
+      // this.state = {
+      //   latestUpdate: null,
+      //   selectedIndex: selectedIndex,
+      //   automaticDetection: automaticDetection,
+      //   sendWarnings: sendWarnings,
+      //   shareData: shareData,
+      //   deviceId: deviceId,
+      // };
+  }
+
+  async getStorageState() {
+      if (Platform.OS == 'android') {
+          try {
+              const settings = await AsyncStorage.getItem('settings');
+              if (settings == null || settings == undefined) {
+                  AsyncStorage.setItem('settings', JSON.stringify({}));
+                  return {};
+              } else {
+                  return JSON.parse(settings);
+              }
+          } catch (e) {
+              console.warn(e);
+              return {};
+          }
+      } else {
+          return {};
+      }
   }
 
   async getData(key) {
     if (Platform.OS == 'android') {
-      try {
-        const settings = await AsyncStorage.getItem('settings');
-        return JSON.parse(settings)[key];
-      } catch (e) {
-        console.warn(e);
-        return null;
-      }
+        const settings = await this.getStorageState();
+        const value = settings[key];
+        if (value == undefined) {
+            return null;
+        } else {
+            return value;
+        }
     } else {
       return Settings.get(key);
     }
@@ -62,9 +80,26 @@ export default class SettingsView extends React.PureComponent {
   }
 
   async storeData(data) {
+    var newState = Object.assign(this.state, data);
+    console.warn(newState);
+    this.setState(newState);
     this.setData(data);
-    this.setState(data);
     console.log(data);
+  }
+
+  handleWarningsSwitch = value => {
+      if (value == true || value == false) {
+        this.setState({sendWarnings: value});
+        this.setData({sendWarnings: value});
+        console.warn(this.state);
+      }
+  }
+  handleShareSwitch = value => {
+      if (value == true || value == false) {
+        this.setState({shareData: value});
+        this.setData({shareData: value});
+        console.warn(this.state);
+      }
   }
 
   buildRoutableItem(title, route) {
@@ -99,15 +134,6 @@ export default class SettingsView extends React.PureComponent {
         <Text style={styles.boxTextClickable} onPress={fetch}>
           Update
         </Text>
-      </View>
-    );
-  }
-
-  buildToggableItem(title, stateProperty) {
-    return (
-      <View style={styles.box}>
-        <Text style={styles.boxText}>{title}</Text>
-        {stateProperty()}
       </View>
     );
   }
@@ -153,31 +179,22 @@ export default class SettingsView extends React.PureComponent {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Algemene instellingen</Text>
-        {this.buildToggableItem(
-          'Stuur waarschuwingen in de achtergrond',
-          () => {
-            return (
-              <Switch
-                style={styles.boxToggle}
-                onValueChange={() =>
-                  this.storeData({sendWarnings: !this.state.sendWarnings})
-                }
-                value={this.state.sendWarnings}
-              />
-            );
-          },
-        )}
-        {this.buildToggableItem('Deel anonieme gebruikersdata', () => {
-          return (
-            <Switch
-              value={this.state.shareData}
-              style={styles.boxToggle}
-              onValueChange={() =>
-                this.storeData({shareData: !this.state.shareData})
-              }
-            />
-          );
-        })}
+        <View style={styles.box}>
+          <Text style={styles.boxText}>{'Stuur waarschuwingen in de achtergrond'}</Text>
+          <Switch
+            value={this.state.sendWarnings}
+            style={styles.boxToggle}
+            onValueChange={this.handleWarningsSwitch}
+          />
+        </View>
+        <View style={styles.box}>
+          <Text style={styles.boxText}>{'Deel anonieme gebruikersdata'}</Text>
+          <Switch
+            value={this.state.shareData}
+            style={styles.boxToggle}
+            onValueChange={this.handleShareSwitch}
+          />
+        </View>
         {this.buildButtonItem('Versie regelgevingsbestanden')}
         {this.buildRoutableItem(
           'Servicevoorwaarden & Juridische Informatie',

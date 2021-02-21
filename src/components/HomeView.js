@@ -65,33 +65,52 @@ export default class HomeView extends React.PureComponent {
     );
   }
 
-  async getData(key) {
+  async getStorageState() {
       if (Platform.OS == 'android') {
           try {
               const settings = await AsyncStorage.getItem('settings');
-              return JSON.parse(settings)[key];
+              if (settings == null || settings == undefined) {
+                  AsyncStorage.setItem('settings', JSON.stringify({}));
+                  return {};
+              } else {
+                  return JSON.parse(settings);
+              }
           } catch (e) {
               console.warn(e);
-              return null;
+              return {};
           }
       } else {
-          return Settings.get(key);
-      };
-  };
+          return {};
+      }
+  }
+
+  async getData(key) {
+    if (Platform.OS == 'android') {
+        const settings = await this.getStorageState();
+        const value = settings[key];
+        if (value == undefined) {
+            return null;
+        } else {
+            return value;
+        }
+    } else {
+      return Settings.get(key);
+    }
+  }
 
   async setData(data) {
-      if (Platform.OS == 'android') {
-          await AsyncStorage.mergeItem('settings',JSON.stringify(data));
-      } else {
-          Settings.set(data);
-      };
-  };
+    if (Platform.OS == 'android') {
+      await AsyncStorage.mergeItem('settings', JSON.stringify(data));
+    } else {
+      Settings.set(data);
+    }
+  }
 
   async componentDidMount() {
-    warnings = await this.getData('sendWarnings');
-    if (warnings == null) {
+    initialized = await this.getData('initialized');
+    if (initialized == null) {
         this.navigation.replace('Welcome');
-        return () => { this.setData({'sendWarnings': false}); };
+        return () => { this.setData({'initialized': true}); };
     };
 
     BackgroundGeolocation.configure({
@@ -265,7 +284,14 @@ export default class HomeView extends React.PureComponent {
     }
   }
 
+  translateEvent(location, event) {
+    console.warn(location);
+    console.warn(event);
+    return location;
+  }
+
   async logEvent(location, event) {
+    const body = translateEvent(location, event);
     location.event = event;
     location.deviceId = this.state.deviceId;
     const i = {

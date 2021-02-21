@@ -51,12 +51,16 @@ export default class WelcomeViewC extends React.PureComponent {
     this.navigation = props.navigation;
   }
 
-  async setData(data) {
-    if (Platform.OS == 'android') {
-      await AsyncStorage.mergeItem('settings', JSON.stringify(data));
-    } else {
-      Settings.set(data);
-    }
+  async setWarnings(val) {
+      if (val == true || val == false) {
+      if (Platform.OS == 'android') {
+          const state = {sendWarnings: val, shareData: false, initialized: true};
+          this.setState(state);
+          await AsyncStorage.setItem('settings', JSON.stringify(state));
+      } else {
+          Settings.set(data);
+      }
+      }
   }
 
   render() {
@@ -74,7 +78,7 @@ export default class WelcomeViewC extends React.PureComponent {
           <TouchableOpacity
             style={[styles.refuse, styles.button]}
             onPress={() => {
-              this.setData({sendWarnings: false});
+              this.setWarnings(false);
               this.navigation.navigate('Home');
             }}>
             <Text style={styles.buttonText}>Nee bedankt</Text>
@@ -83,7 +87,7 @@ export default class WelcomeViewC extends React.PureComponent {
             style={[styles.accept, styles.button]}
             onPress={() => {
               const res = requestBackground();
-              this.setData({sendWarnings: res});
+              this.setWarnings(true);
               this.navigation.navigate('Home');
             }}>
             <Text style={styles.buttonText}>Inschakelen</Text>
