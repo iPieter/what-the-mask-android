@@ -199,10 +199,8 @@ export default class HomeView extends React.PureComponent {
       console.log('[INFO] BackgroundGeolocation services enabled', status.locationServicesEnabled);
       console.log('[INFO] BackgroundGeolocation auth status: ' + status.authorization);
 
-      // you don't need to check status before start (this is just the example)
-      if (!status.isRunning) {
-        BackgroundGeolocation.start(); //triggers start on start event
-      }
+      this.forceUpdate();
+      BackgroundGeolocation.start(); //triggers start on start event
     });
 
     // you can also just start without checking for status
